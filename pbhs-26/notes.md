@@ -76,7 +76,7 @@
     - [Finding Health Statistics](#finding-health-statistics)
   - [💠 Public Health Ethics](#-public-health-ethics)
   - [💠 Health Information Exchange (HIE)](#-health-information-exchange-hie)
-    - [Benefits](#benefits-1)
+    - [HIE Benefits](#hie-benefits)
     - [Directed Exchange](#directed-exchange)
     - [Query-based Exchange](#query-based-exchange)
     - [Consumer-mediated Exchange](#consumer-mediated-exchange)
@@ -707,7 +707,7 @@ Goals and strucure of PH ethics at CDC:
 
 > **Health Information Exchange (HIE)**: allows health care professionals and patients to appropriately access and securely share a patient's medical information electronically
 
-### Benefits
+### HIE Benefits
 
 - avoid readmissions
 - avoid medication errors

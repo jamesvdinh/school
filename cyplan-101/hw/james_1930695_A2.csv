@@ -1,0 +1,21 @@
+name,address,category,lat,lon,disability_access,notes
+Momo House,"2456 Bancroft Way, Berkeley, CA 94704",food,37.86837501450086,-122.26023031141818,yes,good dumpling
+Noodle Dynasty,"2426 Telegraph Ave, Berkeley, CA 94704",food,37.86640715696669,-122.2588487728162,yes,good noodle soup
+Artichoke Basille's Pizza,"2590 Durant Ave, Berkeley, CA 94704",food,37.86793641520652,-122.25685793746166,yes (no restroom),good pizza
+Top Dog,"2534 Durant Ave, Berkeley, CA 94704",food,37.8678956453816,-122.25740293186675,yes (no parking lot or seating),good hot dog
+IB's,"2513 Durant Ave, Berkeley, CA 94704",food,37.86801448336762,-122.25848458710296,yes,good fries
+Mezzo,"2442 Telegraph Ave, Berkeley, CA 94704",food,37.86619015787694,-122.25880583307179,yes,good sandwich
+Champion's CURRY,"2506 Channing Way, Berkeley, CA 94704",food,37.86688250484934,-122.2583907635335,yes,good curry
+Moku Hawaiian BBQ (Berkeley),"2488 Channing Way, Berkeley, CA 94704",food,37.86668969035092,-122.259171147769,yes,good katsu
+Binge Coffee House Telegraph,"2528A Durant Ave, Berkeley, CA 94704",food,37.86782764081617,-122.25767175967411,n/a,good matcha
+Zhangliang Malatang,"2237 Shattuck Ave., Berkeley, CA 94704",food,37.868768330774074,-122.2675150244608,yes,good hotpots
+U :Dessert Story,"1849 Shattuck Ave., Berkeley, CA 94709",dessert,37.87416022498193,-122.26844305413736,yes,good bingsu
+Recreational Sports Facility,"2301 Bancroft Way, Berkeley, CA 94720",sport,37.86864317757003,-122.26277062708807,yes,good gym and climbing wall
+Mosaic Boulders,"2369 Telegraph Ave, Berkeley, CA 94704",sport,37.86748988421846,-122.25880525686827,yes,good climbing wall
+Cal Esports Community Center,"Stern Hall, 2700 Hearst Ave, Berkeley, CA 94720",gaming,37.87515271367943,-122.25587304818684,yes,good gaming space
+Moe's Books,"2476 Telegraph Ave, Berkeley, CA 94704",bookstore,37.86550093431224,-122.25880126453382,yes,good used books
+Sather Gate,"Sather Rd, Berkeley, CA 94720",relaxing,37.870283831923345,-122.25952371623366,yes,cool creek under bridge
+Doe Library,"Doe Library, Campanile Way, Berkeley, CA 94720",relaxing,37.872252679026374,-122.25923503632008,yes,good study space
+The Campanile,"Sather Tower, Berkeley, CA 94720",relaxing,37.8720866290962,-122.25781436040846,yes,good view of the bay
+Memorial Glade,"University Dr, Berkeley, CA 94708",relaxing,37.873185366019364,-122.25939136584338,yes,good picnic spot
+Coleman Fung Institute for Engineering Leadership,"2451 Ridge Rd, Berkeley, CA 94709",relaxing,37.876161367771836,-122.26116503071684,yes,nice interior study spots

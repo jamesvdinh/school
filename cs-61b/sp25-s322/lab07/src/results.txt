@@ -1,0 +1,89 @@
+ This program inserts random Strings of length L
+ into different types of maps as <String, Integer> pairs.
+
+What would you like L to be?: 16
+
+Enter # strings to insert into ULLMap: 4
+ULLMap: 0.00 sec
+
+Enter # strings to insert into your MyHashMap: 5
+MyHashMap: 0.00 sec
+
+Enter # strings to insert into Java's HashMap: 20
+Java's Built-in HashMap: 0.00 sec
+
+Would you like to try more timed-tests? (y/n)y
+
+Enter # strings to insert into ULLMap: 20
+ULLMap: 0.00 sec
+
+Enter # strings to insert into your MyHashMap: 200
+MyHashMap: 0.00 sec
+
+Enter # strings to insert into Java's HashMap: 200
+Java's Built-in HashMap: 0.00 sec
+
+Would you like to try more timed-tests? (y/n)y
+
+Enter # strings to insert into ULLMap: 1000
+ULLMap: 0.01 sec
+
+Enter # strings to insert into your MyHashMap: 1000
+MyHashMap: 0.00 sec
+
+Enter # strings to insert into Java's HashMap: 1000
+Java's Built-in HashMap: 0.00 sec
+
+Would you like to try more timed-tests? (y/n)y
+
+Enter # strings to insert into ULLMap: 10000
+ULLMap: 0.33 sec
+
+Enter # strings to insert into your MyHashMap: 10000
+MyHashMap: 0.02 sec
+
+Enter # strings to insert into Java's HashMap: 10000
+Java's Built-in HashMap: 0.01 sec
+
+From lower numbers of strings to insert into each data structure, the runtime is relatively low and quick. However, with higher values,
+the runtime starts to increase in decreasing value from ULLMap, MyHashMap, and Java's Built-in Hashmap.
+
+ This program inserts lexicographically increasing Stringsinto Maps as <String, Integer> pairs.
+
+Enter # strings to insert into ULLMap: 10000
+ULLMap: 0.49 sec
+
+Enter # strings to insert into MyHashMap: 10000
+MyHashMap: 0.02 sec
+
+Enter # strings to insert into Java's HashMap: 10000
+Java's Built-in HashMap: 0.01 sec
+
+I think that in instances where you are dealing with a large dataset, roughly in the ballpark of tens to hundreds of thousands of key, value pairs,
+then a HashMap would be better than a BSTMap/TreeMap or other data structures because methods of a HashMap run in constant amortized runtime and
+are relatively quick.
+
+ This program inserts random Strings of length L
+ into different types of maps as <String, Integer> pairs.
+
+What would you like L to be?: 10
+
+Enter # strings to insert into each map: 10000
+MyHashMap with ArrayList buckets: 0.03 sec
+MyHashMap with LinkedList buckets: 0.01 sec
+MyHashMap with HashSet buckets: 0.01 sec
+MyHashMap with Stack buckets: 0.01 sec
+MyHashMap with ArrayDeque buckets: 0.01 sec
+
+Would you like to try more timed-tests? (y/n)y
+
+Enter # strings to insert into each map: 50000
+MyHashMap with ArrayList buckets: 0.05 sec
+MyHashMap with LinkedList buckets: 0.04 sec
+MyHashMap with HashSet buckets: 0.03 sec
+MyHashMap with Stack buckets: 0.03 sec
+MyHashMap with ArrayDeque buckets: 0.02 sec
+
+With higher values of N, the ArrayDeque buckets seem to run the fastest with ArrayList buckets being slowest. This is most likely due to
+how we index each data structure and add elements to each. If we were able to use a constant-time search over the HashSet, then yes, the hash table
+would speed up asymptotically because we would switch from O(n) to O(1) average lookup time.

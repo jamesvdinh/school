@@ -57,3 +57,12 @@ In **code-centric** data systems, *both* are possible:
 ![[Screenshot 2025-09-18 at 2.44.14 PM.png]]
 
 ![[Screenshot 2025-09-18 at 2.44.23 PM.png]]
+
+**Predicate pushdown**
+![[Screenshot 2025-09-18 at 3.06.37 PM.png]]
+![[Screenshot 2025-09-18 at 3.12.25 PM.png]]
+TLDR: nest `WHERE` conditions ($\sigma$ in RA) with their respective table *BEFORE* applying any joins
+
+**Projection pushdown**
+![[Screenshot 2025-09-18 at 3.08.11 PM.png]]
+TLDR: nest `SELECT` operations (**projection** in RA) with their respective table *BEFORE* applying any joins

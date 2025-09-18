@@ -84,10 +84,15 @@ class Vectorizer:
             raise Exception("Vectorizer not intialized! You must first call fit with a training set" )
 
         transformed_data = []
+        feature_order = list(self.feature_transforms.keys())
         for r in X:
-            new_row = {}
-            for feat, transform in self.feature_transforms.items():
-                new_row[feat] = transform(r[feat])
-            transformed_data.append(new_row)
-            
-        return np.array(transformed_data)
+            row = []
+            for feat in feature_order:
+                val = r.get(feat, None)
+                if val is None:
+                    row.append(0.0)
+                else:
+                    row.append(self.feature_transforms[feat](val))
+            transformed_data.append(row)
+
+        return np.array(transformed_data, dtype=float)

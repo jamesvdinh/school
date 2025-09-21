@@ -10,6 +10,7 @@ import numpy as np
 import random
 import os
 
+
 def add_main_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--plco_data_path",
@@ -53,25 +54,30 @@ def add_main_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
     return parser
 
+
 def load_data(args: argparse.Namespace) -> tuple[list, list, list]:
     '''
     Load PLCO data from csv file and split into train validation and testing sets.
     '''
-    reader = DictReader(open(args.plco_data_path,"r"))
+    reader = DictReader(open(args.plco_data_path, "r"))
     rows = [r for r in reader]
     NUM_TRAIN, NUM_VAL = 100000, 25000
     random.seed(0)
     random.shuffle(rows)
-    train, val, test = rows[:NUM_TRAIN], rows[NUM_TRAIN:NUM_TRAIN+NUM_VAL], rows[NUM_TRAIN+NUM_VAL:]
+    train, val, test = rows[:NUM_TRAIN], rows[NUM_TRAIN:NUM_TRAIN +
+                                              NUM_VAL], rows[NUM_TRAIN+NUM_VAL:]
 
-    print(f"Data split: {len(train)} train, {len(val)} val, {len(test)} test samples")
+    print(
+        f"Data split: {len(train)} train, {len(val)} val, {len(test)} test samples")
     return train, val, test
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser = add_main_args(parser)
     args = parser.parse_args()
     return args
+
 
 def main(args: argparse.Namespace) -> dict:
     print(args)
@@ -86,7 +92,14 @@ def main(args: argparse.Namespace) -> dict:
     #     "categorical": ["sex", "race7"],     # Features for one-hot encoding
     #     "ordinal": ["educat"]                # Features for integer encoding
     # }
-    feature_config = {"numerical": ["age"]}
+    feature_config = {
+        "numerical": ["age", "pack_years"],
+        "categorical": ["sex"],
+        "ordinal": ["educat"]
+    }
+
+    # age and pack_years improved valicadion AUC the most
+    # race7 decreased AUC slightly
 
     print("Initializing vectorizer and extracting features")
     # TODO: Implement a vectorizer to convert the questionnaire features into a feature vector
@@ -108,10 +121,10 @@ def main(args: argparse.Namespace) -> dict:
 
     # TODO: Initialize and train a logistic regression model
     model = LogisticRegression(
-        num_epochs=args.num_epochs, 
-        learning_rate=args.learning_rate, 
-        batch_size=args.batch_size, 
-        regularization_lambda=args.regularization_lambda, 
+        num_epochs=args.num_epochs,
+        learning_rate=args.learning_rate,
+        batch_size=args.batch_size,
+        regularization_lambda=args.regularization_lambda,
         verbose=True
     )
 
@@ -131,12 +144,11 @@ def main(args: argparse.Namespace) -> dict:
 
     print("Saving results to {}".format(args.results_path))
 
-    json.dump(results, open(args.results_path, "w"), indent=True, sort_keys=True)
+    json.dump(results, open(args.results_path, "w"),
+              indent=True, sort_keys=True)
 
     # Print AUC on validation set. Note, you always want to use validation set to tune your model.
     print(f"Validation AUC: {results['val_auc']}")
-
-    
 
     # Compute AUC on test set and print for submission. Note, you should not use test set to tune your model.
     # Uncomment these lines only when you're ready for final evaluation:
@@ -147,6 +159,7 @@ def main(args: argparse.Namespace) -> dict:
     print("Done")
 
     return results
+
 
 if __name__ == '__main__':
     __spec__ = None

@@ -1,0 +1,30 @@
+Namespace(plco_data_path='./plco/lung_prsn.csv', learning_rate=0.001, regularization_lambda=0.01, batch_size=512, num_epochs=10, results_path='results.json')
+Loading data from ./plco/lung_prsn.csv
+Data split: 100000 train, 25000 val, 29887 test samples
+Initializing vectorizer and extracting features
+Training model
+Starting epoch 1
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 14285.68it/s]
+Starting epoch 2
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 12434.90it/s]
+Starting epoch 3
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 13168.30it/s]
+Starting epoch 4
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 12215.03it/s]
+Starting epoch 5
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 13030.95it/s]
+Starting epoch 6
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 7010.24it/s]
+Starting epoch 7
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 9915.49it/s]
+Starting epoch 8
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 14612.48it/s]
+Starting epoch 9
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 11055.31it/s]
+Starting epoch 10
+  0%|          | 0/196 [00:00<?, ?it/s]100%|██████████| 196/196 [00:00<00:00, 15524.49it/s]
+Evaluating model
+{'train_auc': np.float64(0.5969738129009935), 'val_auc': np.float64(0.6066673125222449)}
+Saving results to results.json
+Validation AUC: 0.6066673125222449
+Done

@@ -12,6 +12,8 @@ class LogisticRegression():
         self.batch_size = batch_size
         self.verbose = verbose
         self.regularization_lambda = regularization_lambda
+        self.theta = None
+        self.bias = None
 
     def sigmoid(self, z):
         return np.where(z >= 0, 
@@ -27,8 +29,8 @@ class LogisticRegression():
         Y = np.asarray(Y, dtype=float)
 
         n, d = X.shape
-        theta = np.zeros(d)
-        bias = 0.0
+        self.theta = np.zeros(d)
+        self.bias = 0.0
         for epoch in range(1, self.num_epochs + 1):
             if self.verbose:
                 print("Starting epoch {}".format(epoch))
@@ -46,8 +48,8 @@ class LogisticRegression():
                 grad_theta, grad_bias = self.gradient(X_batch, Y_batch)
 
                 # Update parameters
-                theta -= self.learning_rate * grad_theta
-                bias -= self.learning_rate * grad_bias
+                self.theta -= self.learning_rate * grad_theta
+                self.bias -= self.learning_rate * grad_bias
 
     def gradient(self, X, Y):
         """
@@ -55,11 +57,11 @@ class LogisticRegression():
             Hint: Pay special attention to the numerical stability of your implementation.
         """
         m = X.shape[0]
-        z = np.dot(X, self.theta) + self.bias
+        z = X @ self.theta + self.bias
         preds = self.sigmoid(z)
 
         error = preds - Y
-        grad_theta = (1/m) * X.T.dot(error) + (self.reg_lambda/m) * self.theta
+        grad_theta = (1/m) * (X.T @ error) + (self.regularization_lambda/m) * self.theta
         grad_bias  = (1/m) * np.sum(error)
 
         return grad_theta, grad_bias
@@ -69,7 +71,7 @@ class LogisticRegression():
             Predict the probability of lung cancer for each sample in X.
         """
         X = np.asarray(X, dtype=float)
-        return self.sigmoid(X.dot(self.theta) + self.bias)
+        return self.sigmoid(X @ self.theta) + self.bias
 
     def predict(self, X, threshold=0.5):
         """

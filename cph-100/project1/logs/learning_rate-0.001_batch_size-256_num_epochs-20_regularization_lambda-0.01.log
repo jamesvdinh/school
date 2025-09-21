@@ -1,0 +1,50 @@
+Namespace(plco_data_path='./plco/lung_prsn.csv', learning_rate=0.001, regularization_lambda=0.01, batch_size=256, num_epochs=20, results_path='results.json')
+Loading data from ./plco/lung_prsn.csv
+Data split: 100000 train, 25000 val, 29887 test samples
+Initializing vectorizer and extracting features
+Training model
+Starting epoch 1
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17212.50it/s]
+Starting epoch 2
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 16704.93it/s]
+Starting epoch 3
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 19767.76it/s]
+Starting epoch 4
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 13905.74it/s]
+Starting epoch 5
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 12944.36it/s]
+Starting epoch 6
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 16215.84it/s]
+Starting epoch 7
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 16572.08it/s]
+Starting epoch 8
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17124.97it/s]
+Starting epoch 9
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17198.96it/s]
+Starting epoch 10
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17223.35it/s]
+Starting epoch 11
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17068.29it/s]
+Starting epoch 12
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17309.33it/s]
+Starting epoch 13
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 16816.61it/s]
+Starting epoch 14
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 17957.94it/s]
+Starting epoch 15
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 18771.08it/s]
+Starting epoch 16
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 23541.52it/s]
+Starting epoch 17
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 23591.30it/s]
+Starting epoch 18
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 19908.38it/s]
+Starting epoch 19
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 20569.08it/s]
+Starting epoch 20
+  0%|          | 0/391 [00:00<?, ?it/s]100%|██████████| 391/391 [00:00<00:00, 22020.74it/s]
+Evaluating model
+{'train_auc': np.float64(0.5969738129009935), 'val_auc': np.float64(0.6066673125222449)}
+Saving results to results.json
+Validation AUC: 0.6066673125222449
+Done

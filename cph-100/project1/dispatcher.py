@@ -61,10 +61,14 @@ def get_experiment_list(config: dict) -> list[dict]:
             ...
         ]
     '''
-    jobs = [{}]
+    jobs = []
 
     # TODO: Go through the tree of possible jobs and enumerate into a list of jobs
-    raise NotImplementedError("Not implemented yet")
+    keys = list(config.keys())
+    values = [config[k] for k in keys]
+    for combination in itertools.product(*values):
+        job = dict(zip(keys, combination))
+        jobs.append(job)
 
     return jobs
 
@@ -107,12 +111,37 @@ def launch_experiment(args: argparse.Namespace, experiment_config: dict) -> dict
         os.makedirs(args.log_dir)
 
     # TODO: Launch the experiment
+    # Build command
+    cmd = [sys.executable, "main.py"]
+    for k, v in experiment_config.items():
+        cmd.append(f"--{k}")
+        cmd.append(str(v))
 
+    # Log file for this experiment (based on config values)
+    exp_name = "_".join([f"{k}-{v}" for k, v in experiment_config.items()])
+    log_path = os.path.join(args.log_dir, f"{exp_name}.log")
+
+    # Run the experiment
+    with open(log_path, "w") as logfile:
+        subprocess.run(cmd, stdout=logfile, stderr=subprocess.STDOUT, check=True)
     # TODO: Parse the results from the experiment and return them as a dict
-
-    raise NotImplementedError("Not implemented yet")
-
+    train_auc, val_auc = None, None
+    with open(log_path, "r") as logfile:
+        for line in logfile:
+            if "train_auc" in line.lower():
+                raw_value = line.strip().split()[-1]
+                clean_value = raw_value.replace("np.float64(", "").replace(")", "").replace("}", "")
+                train_auc = float(clean_value)
+            elif "val_auc" in line.lower():
+                raw_value = line.strip().split()[-1]
+                clean_value = raw_value.replace("np.float64(", "").replace(")", "").replace("}", "")
+                val_auc = float(clean_value)
     results = {}
+
+    # Merge experiment config with results
+    results.update(experiment_config)
+    results["train_auc"] = train_auc
+    results["val_auc"] = val_auc
     return results
 
 

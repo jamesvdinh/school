@@ -152,9 +152,9 @@ def main(args: argparse.Namespace) -> dict:
 
     # Compute AUC on test set and print for submission. Note, you should not use test set to tune your model.
     # Uncomment these lines only when you're ready for final evaluation:
-    # pred_test_Y = model.predict_proba(test_X)
-    # test_auc = roc_auc_score(test_Y, pred_test_Y)
-    # print(f"Test AUC: {test_auc:.4f}")
+    pred_test_Y = model.predict_proba(test_X)
+    test_auc = roc_auc_score(test_Y, pred_test_Y)
+    print(f"Test AUC: {test_auc:.4f}")
 
     print("Done")
 

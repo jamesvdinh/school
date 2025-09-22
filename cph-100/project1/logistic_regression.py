@@ -1,5 +1,7 @@
 import numpy as np
 import tqdm
+import pandas as pd
+
 
 class LogisticRegression():
     """
@@ -16,9 +18,9 @@ class LogisticRegression():
         self.bias = None
 
     def sigmoid(self, z):
-        return np.where(z >= 0, 
-            1 / (1 + np.exp(-z)), 
-            np.exp(z) / (1 + np.exp(z)))
+        return np.where(z >= 0,
+                        1 / (1 + np.exp(-z)),
+                        np.exp(z) / (1 + np.exp(z)))
 
     def fit(self, X, Y):
         """
@@ -61,8 +63,9 @@ class LogisticRegression():
         preds = self.sigmoid(z)
 
         error = preds - Y
-        grad_theta = (1/m) * (X.T @ error) + (self.regularization_lambda/m) * self.theta
-        grad_bias  = (1/m) * np.sum(error)
+        grad_theta = (1/m) * (X.T @ error) + \
+            (self.regularization_lambda/m) * self.theta
+        grad_bias = (1/m) * np.sum(error)
 
         return grad_theta, grad_bias
 
@@ -78,3 +81,19 @@ class LogisticRegression():
             Predict the if patient will develop lung cancer for each sample in X.
         """
         return (self.predict_proba(X) >= threshold).astype(int)
+
+    def print_coefficients(self, feature_names=None):
+        """
+        Return coefficients and odds ratios as a pandas DataFrame.
+        """
+        if feature_names is None:
+            feature_names = [f"x{i}" for i in range(len(self.theta))]
+
+        data = {
+            "Feature": feature_names + ["Intercept"],
+            "Coefficient": list(self.theta) + [self.bias],
+            "Odds Ratio": list(np.exp(self.theta)) + [np.exp(self.bias)],
+        }
+
+        df = pd.DataFrame(data)
+        print(df)

@@ -125,10 +125,11 @@ def main(args: argparse.Namespace) -> dict:
         learning_rate=args.learning_rate,
         batch_size=args.batch_size,
         regularization_lambda=args.regularization_lambda,
-        verbose=True
+        verbose=False
     )
 
     model.fit(train_X, train_Y)
+    model.print_coefficients()
 
     print("Evaluating model")
 

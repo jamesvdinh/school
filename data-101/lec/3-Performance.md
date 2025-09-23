@@ -17,7 +17,7 @@ Data is laid out on pages (or blocks) on stable disk storage (SSD, HDD)
 
 - page size: 8KB, usually, may habe 100s of records
 
-![alt](../img/pages.png)
+![alt](pages.png)
 
 ## Computer Components
 

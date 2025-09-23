@@ -167,7 +167,7 @@ Maintains *referential integrity* by restricting updates based on whether an att
 - like a pointer from a tuple in one table to a tuple in another
   - points to exactly **ONE TUPLE**
 
-![Screenshot](../img/fk.png)
+![Screenshot](fk.png)
 
 `REFERENCE`d attributes must be declared `UNIQUE` or `PRIMARY KEY`
 
@@ -190,7 +190,7 @@ CREATE TABLE cast_info (
 );
 ```
 
-![fk](../img/fk2.png)
+![fk](fk2.png)
 
 ### Attribute-based Constraints
 

@@ -10,3 +10,8 @@ Radiology: using medical imaging to treat & diagnose diseases
 - learning curve
 - difficulty in maintaining health status quo
 - transparency of algorithms
+
+## Radiology
+File format: DICOM
+- jpeg/png of radiology
+- raw image data for ML training

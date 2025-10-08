@@ -42,3 +42,8 @@ Numerical data is measured in a hierarchy of units
 - seconds → hours → minutes → days
 - mm → cm → m → km
 - in → ft → mi
+
+**"rolling up"**: coarser granularity
+- go *up* in a hierarchy
+**"drilling down"**: finer granularity
+- go *down* in a hierarchy

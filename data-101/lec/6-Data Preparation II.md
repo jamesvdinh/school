@@ -1,3 +1,13 @@
+## Table Sample Performance
+`ORDER BY RANDOM`
+- expensive for huge tables (due to sorting)
+
+`TABLESAMPLE BERNOULLI(p)`
+- Essentially equivalent to above, but sometimes a bit faster in implementation
+
+`TABLESAMPLE SYSTEM(p)`
+- Faster, but less random (due to page-level sampling)
+
 ## Scalar functions
 A function on atomic values
 - in the relational model, this is a function on constants and individual attributes of a single relational tuple

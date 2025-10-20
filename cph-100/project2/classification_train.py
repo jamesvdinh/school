@@ -94,9 +94,10 @@ def train_epoch(model, train_loader, optimizer, criterion, device, max_steps=Non
         optimizer.zero_grad()
 
         # TODO: Implement the forward pass
+        outputs = model(data)
 
         # TODO: Compute the loss
-        loss = 0  # TODO: Compute the loss
+        loss = criterion(outputs, target)  # TODO: Compute the loss
 
         loss.backward()
         optimizer.step()

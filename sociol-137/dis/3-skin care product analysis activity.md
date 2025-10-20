@@ -1,0 +1,8 @@
+- rating: 7 on EWG
+- health concerns
+	- high allergies & immunotoxicity
+	- high use restrictions: for children under 6mo. of age -> consult a doctor
+- claims "dermatologist tested"
+- claims 360 degree protection
+- claims to protect from photo-aging
+- performed an internal clinical study that found that 92% would recommend the product

@@ -30,7 +30,7 @@ def train_model(model, train_loader, val_loader, epochs=20, learning_rate=0.001,
     # Setup optimizer and loss function
     optimizer = optim.Adam(
         model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    criterion = None  # TODO: Add your own loss function here
+    criterion = nn.CrossEntropyLoss()
 
     # Track training history
     history = {
@@ -93,11 +93,11 @@ def train_epoch(model, train_loader, optimizer, criterion, device, max_steps=Non
         # Zero gradients
         optimizer.zero_grad()
 
-        # TODO: Implement the forward pass
-        outputs = model(data)
+        # Forward pass
+        output = model(data)
 
-        # TODO: Compute the loss
-        loss = criterion(outputs, target)  # TODO: Compute the loss
+        # Compute the loss
+        loss = criterion(output, target)
 
         loss.backward()
         optimizer.step()
@@ -135,10 +135,10 @@ def validate_epoch(model, val_loader, criterion, device):
                 target = target.squeeze()
 
             # Forward pass
-            # TODO: Implement the forward pass
+            output = model(data)
 
-            # TODO: Compute the loss
-            loss = 0  # TODO: Compute the loss
+            # Compute the loss
+            loss = criterion(output, target)
 
             # Track statistics
             total_loss += loss.item()

@@ -53,31 +53,35 @@ class CNNModel(nn.Module):
         # 🧱 Convolutional feature extractor
         self.conv1 = nn.Conv2d(
             in_channels=3, out_channels=32, kernel_size=3, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)  # BatchNorm after first conv layer
+
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.bn2 = nn.BatchNorm2d(64)  # BatchNorm after second conv layer
+
         self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        self.bn3 = nn.BatchNorm2d(128)  # BatchNorm after third conv layer
 
         self.pool = nn.MaxPool2d(2, 2)  # Halves spatial dimensions each time
         self.dropout = nn.Dropout(0.25)
 
         # After 3 poolings: 28 → 14 → 7 → 3
         self.fc1 = nn.Linear(128 * 3 * 3, 256)
+        # BatchNorm for fully connected layer
+        self.bn_fc1 = nn.BatchNorm1d(256)
         self.fc2 = nn.Linear(256, num_classes)
 
     def forward(self, x):
         # 🌀 Feature extraction
-        x = F.relu(self.conv1(x))   # -> (32, 28, 28)
-        x = self.pool(x)            # -> (32, 14, 14)
-        x = F.relu(self.conv2(x))   # -> (64, 14, 14)
-        x = self.pool(x)            # -> (64, 7, 7)
-        x = F.relu(self.conv3(x))   # -> (128, 7, 7)
-        x = self.pool(x)            # -> (128, 3, 3)
-        x = self.dropout(x)
+        x = self.pool(F.relu(self.bn1(self.conv1(x))))  # -> (32, 14, 14)
+        x = self.pool(F.relu(self.bn2(self.conv2(x))))  # -> (64, 7, 7)
+        # -> (128, 3, 3)        x = self.dropout(x)
+        x = self.pool(F.relu(self.bn3(self.conv3(x))))
 
         # 🧠 Flatten
         x = torch.flatten(x, 1)     # -> (batch_size, 128*3*3)
 
         # 💡 Fully connected layers
-        x = F.relu(self.fc1(x))
+        x = F.relu(self.bn_fc1(self.fc1(x)))
         x = self.dropout(x)
         x = self.fc2(x)
 

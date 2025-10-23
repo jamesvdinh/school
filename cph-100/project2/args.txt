@@ -1,0 +1,4 @@
+--model_name mlp
+--learning_rate 0.001
+--num_epochs 40
+--weight_decay 0.0001

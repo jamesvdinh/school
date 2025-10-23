@@ -6,10 +6,31 @@ U-Net segmentation of colored boxes on PathMNIST images.
 import sys
 import os
 import torch
+import pandas as pd
 
 from synthetic_data import create_box_dataloaders, visualize_box_samples, PathMNISTBoxDataset
 from segmentation_models import get_segmentation_model, count_parameters
 from segmentation_train import train_segmentation_model, evaluate_segmentation_model, visualize_predictions
+
+# Save IoU metrics to CSV
+
+
+def save_iou_history(history, test_iou=None, csv_path="results/segmentation_metrics.csv"):
+    os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+
+    epochs = range(1, len(history['val_iou']) + 1)
+    df = pd.DataFrame({
+        "epoch": epochs,
+        "train_iou": history['train_iou'],
+        "val_iou": history['val_iou'],
+    })
+
+    # If you also have test IoU, append it as a constant column
+    if test_iou is not None:
+        df["test_iou"] = [test_iou] * len(df)
+
+    df.to_csv(csv_path, index=False)
+    print(f"✅ IoU history saved to {csv_path}")
 
 
 def main(args):
@@ -64,7 +85,7 @@ def main(args):
         epochs=args.num_epochs,
         learning_rate=args.learning_rate,
         weight_decay=args.weight_decay,
-        max_steps_per_epoch=100  # Fast exploration mode
+        max_steps_per_epoch=200  # Fast exploration mode
     )
 
     # Evaluate model on validation set
@@ -76,6 +97,13 @@ def main(args):
     val_iou = val_results['mean_iou']
     print(f"\n📊 {args.model_name.upper()} Results:")
     print(f"   Final Validation IoU: {val_iou:.4f}")
+
+    # Save IoU history
+    save_iou_history(
+        history,
+        test_iou=None,
+        csv_path=f'results/{args.model_name}_segmentation_metrics.csv'
+    )
 
     # Visualize predictions
     print(f"\nVisualizing {args.model_name} predictions...")
@@ -94,8 +122,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='PathMNIST Black Box Segmentation')
     parser.add_argument('--model_name', type=str, default='unet',
-                        # TODO: add your models names here
-                        choices=['mlp', 'unet'],
+                        choices=['mlp', 'cnn', 'unet'],
                         help='Segmentation model to train')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Learning rate for training')

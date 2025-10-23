@@ -1,13 +1,19 @@
 # Results
 
-## 1 epoch, 100 steps
+## Part 1: CNN
 
-MLP validation accuracy: 0.3368
+1 epoch, 100 steps
 
-CNN validation accuracy: ...
+- MLP validation accuracy: 0.3368
+- CNN validation accuracy: ...
 
-## Final model
+Final model
 
-MLP validation accuracy: 0.5644
+- MLP validation accuracy: 0.5644
+- CNN validation accuracy: 0.9363
 
-CNN validation accuracy: 0.9363
+## Part 2: Segmentation
+
+Final model
+
+- U-NET IoU accuracy: 0.9982

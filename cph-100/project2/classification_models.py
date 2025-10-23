@@ -96,7 +96,6 @@ def get_model(model_name, num_classes=9):
     elif model_name == 'cnn':
         return CNNModel(num_classes)
     else:
-        # TODO: add your models names here
         raise ValueError("Unknown model: {}".format(model_name))
 
 

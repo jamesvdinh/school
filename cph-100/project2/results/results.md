@@ -16,4 +16,4 @@ Final model
 
 Final model
 
-- U-NET IoU accuracy: 0.9982
+- Best U-NET IoU accuracy: 0.9982

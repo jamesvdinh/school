@@ -122,7 +122,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='PathMNIST Black Box Segmentation')
     parser.add_argument('--model_name', type=str, default='unet',
-                        choices=['mlp', 'cnn', 'unet'],
+                        choices=['mlp', 'unet'],
                         help='Segmentation model to train')
     parser.add_argument('--learning_rate', type=float, default=0.001,
                         help='Learning rate for training')

@@ -5,7 +5,7 @@ Entity Relationship Diagram
 ![[Screenshot 2025-10-21 at 2.26.43 PM.png]]
 **Entity set** (rectangles)
 - **Entities** are things, objects, etc
-- **Entity** sets are sets of entities with common properties
+- **Entity sets** are sets of entities with common properties
 
 **Attributes** (ovals) are atomic features
 - connected to entity sets of relationships

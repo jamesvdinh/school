@@ -4,9 +4,15 @@ import pandas as pd
 DIABETES_CODES = ['250', 'E10', 'E11', 'E13']
 
 
-def load_data(file_path):
+def load_data(file_path, usecols=None):
     """Load diagnoses data from a CSV file."""
-    return pd.read_csv(file_path, compression='gzip', low_memory=False)
+    return pd.read_csv(
+        file_path,
+        compression='gzip',
+        low_memory=False,
+        dtype=str,
+        usecols=usecols
+    )
 
 
 def get_diabetic_patients(diagnoses_df):

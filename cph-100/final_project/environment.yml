@@ -1,0 +1,17 @@
+name: cph100_final
+dependencies:
+  - python=3.10
+  - pandas
+  - numpy
+  - scikit-learn
+  - umap-learn
+  - matplotlib
+  - seaborn
+  - jupyter
+  - pyarrow
+  - pathLib
+  - tqdm
+  - pip
+  - pip:
+      - hdbscan
+      - shap

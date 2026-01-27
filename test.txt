@@ -1,0 +1,9 @@
+={
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/1zns49cd82oXH70kNL1ajteJ5Jv9XVc2mqTFJmpG36QQ/edit?usp=drive_link", "sheet1!A3:Z");
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/1D22cCEcUPLzPBuMvwhbgCDD1N-it0p_F8yPDeZiJmRQ/edit?usp=drive_link", "sheet1!A3:Z");
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/1HiwDkhFWOzuw17CQFLKPSCKZ_YR4fsa6wglUlF3SbtM/edit?usp=drive_link", "sheet1!A3:Z");
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/1pNxsTke5LA5AVmCaY1aRxrSc58dzJH6UNoRc9WPBf8k/edit?usp=drive_link", "sheet1!A3:Z");
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/18PlghxjAtIJMnNFsLZaHupxYvXh9Guy5uUvli7ADUW0/edit?usp=drive_link", "sheet1!A3:Z");
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/1rMvYKQ9vWXFQJZgW6P8m6OcPUZtATUjm6yW93u0wG2s/edit?usp=drive_link", "sheet1!A3:Z");
+  IMPORTRANGE("https://docs.google.com/spreadsheets/d/1o5y3ICfX97NlddYcXWiatMCegjDiSmH-ouOHYI7-pIg/edit?usp=drive_link", "sheet1!A3:Z");
+}

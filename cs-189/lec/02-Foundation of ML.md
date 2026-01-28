@@ -20,3 +20,9 @@ How do we evaluate how good a classifier is?
 2. Smaller Test Part (~20%)
 
 | Only use Test set **once** after developing and training the model to avoid overfitting
+
+### Exam analogy
+
+Train: Practice exam with answer key
+Validation: practice exam
+Test: Actual exam

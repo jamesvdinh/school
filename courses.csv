@@ -1,0 +1,28 @@
+course_id,course_title,concentration,instructor
+264,Applied Continuum Mechanics,AEMM,Govindjee
+241A,Design & Analysis of Modern Structural Materials,AEMM,Hosemann
+280A,Electronic Properties of Materials,AEMM,Wu
+281A,Quantum Physics for Semiconductor Engineers,AEMM,Wu
+281,Development of Modern Materials for the Microelectronics Industry,AEMM,Al Balushi
+282,Techniques for Electronic Devices Fabrication,AEMM,Arias
+286,Photovoltaic Device Technology,AEMM,Arias
+202A,Human Centered Design Methods I,AEMM,Goucher-Lambert
+203,Designing for the Human Body,AEMM,O’Connell
+210B,Engineering a Net-Zero Carbon Future,EIE,Moura
+215A,Nuclear Energy and the Environment,EIE,Fratoni
+210A,Renewable Energy Systems,EIE,Alam
+218,Wildland Fire Engineering,EIE,Gollner
+216B,Earthquake-induced Soil Liquefaction,EIE,Athanasopoulos-Zekkos
+217B,Modern Ocean Engineering,EIE,Alam
+217C,"Marine Hydrodynamics, from Model Testing to Modern Drag Reduction Techniques",EIE,Makiharju
+202A,Human Centered Design Methods I,EIE,Goucher-Lambert
+203,Designing for the Human Body,EIE,O’Connell
+235A,Python for Engineers,AIRC,Gomes
+234,Introduction to Data Structures and Software Engineering,AIRC,Hug
+236B,Data Science and Machine Learning Fundamentals,AIRC,Hug
+252,"Legged Robots: How to make robots walk and run",AIRC,Sreenath
+253,"Flying Robots: From Small Drones to Aerial Taxis",AIRC,Mueller
+250A,Analysis & Control of Nonlinear Systems,AIRC,Arcak
+247,Fundamentals of Modern Aerodynamic Design & Analysis,AIRC,Alam
+202A,Human Centered Design Methods I,AIRC,Goucher-Lambert
+203,Designing for the Human Body,AIRC,O’Connell

@@ -55,7 +55,6 @@ for k in k_values:
     # Eckart-Young optimal error = sigma_{k+1}
     optimal_errors.append(true_sigmas[k] if k < n else 0.0)
 
-# ── Print table ───────────────────────────────────────────────────────────────
 print(f"{'k':>4} | {'Randomized Error':>18} | {'Optimal (σ_{k+1})':>18} | {'Ratio':>8}")
 print("-" * 58)
 for k, re, oe in zip(k_values, rand_errors, optimal_errors):

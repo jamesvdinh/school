@@ -1,8 +1,10 @@
-> A cloud-based data warehouse platform built to be used in the cloud (AWS, Azure, Google Cloud Platforms)
+```ad-important
+title: What is Snowflake?
+A cloud-based data warehouse platform built to be used in the cloud (AWS, Azure, Google Cloud Platforms)
+```
 
 First analytics database solution in the cloud
 - runs entirely on *public cloud infrastructure*
-
 ## Snowflake's Architecture
 Built specifically for the *cloud*
 
@@ -23,7 +25,6 @@ Handles:
 Combines the benefits of *shared disk* and *shared nothing* architectures
 
 ### Data Warehouse Layers
-By design, all layers are automatically scalable and are redundant
 
 **Storage Layer**
 - stores all data in loaded in snowflake including *structured* and *semi-structured* data
@@ -35,12 +36,16 @@ By design, all layers are automatically scalable and are redundant
 	- metadata
 	- statistics
 
-> **structured data**: highly rigid and organized; fits in tables with rows and columns (ex. SQL databases, CSV, Excel)
-> 	- relational databases (RDBMS)
-> 	- *difficult* to change, yet highly efficient using SQL
-> **semi-structured data**: flexible hierarchy of data; uses tags, markers, or keys to separate data elements and enforces hierarchy within data itself (ex. JSON, XLM, YAML)
-> 	- NoSQL databases
-> 	- *easy* to change, yet highly inefficient on JOINs
+```ad-info
+title: Structured vs Unstructured Data
+**structured data**: highly rigid and organized; fits in tables with rows and columns (ex. SQL databases, CSV, Excel)
+-  relational databases (RDBMS)
+- *difficult* to change, yet highly efficient using SQL
+
+**semi-structured data**: flexible hierarchy of data; uses tags, markers, or keys to separate data elements and enforces hierarchy within data itself (ex. JSON, XLM, YAML)
+- NoSQL databases
+- *easy* to change, yet highly inefficient on JOINs
+```
 
 **Compute Layer**
 - made up of *virtual warehouses* that execute data processing tasks required by queries
@@ -56,3 +61,37 @@ By design, all layers are automatically scalable and are redundant
 	- metadata management
 	- query parsing/optimization
 	- access control
+
+```ad-important
+By design, all layers are automatically *scalable* and are *redundant*
+```
+
+## Designing a Database
+
+### Step 1: create the DB
+```sql
+CREATE OR REPLACE DATABASE SALES_DB
+```
+
+**Creating schemas**
+Databases usually only provide two basic schemas on creation: `INFORMATION_SCHEMA` and `PUBIC`
+```sql
+CREATE SCHEMA IF NOT EXISTS SALES_DB.RAW
+CREATE SCHEMA IF NOT EXISTS SALES_DB.ANALYTICS
+```
+
+### Step 2: load the data into `RAW`
+each **ELT** pipeline begins at a data source and ends at a database (e.g. data warehouse). In this case, the source is the raw CSV file and the destination is the `RAW` database
+
+```ad-abstract
+title: steps
+1. go to `+` -> `Load data into a Table`
+2. select the CSV file
+3. choose dataase `SALES_DB`
+4. choose schema `RAW`
+5. name the table `SALES`
+```
+
+```ad-info
+Snowflake automatically creates the *schema* from the imported data from the column names themselves
+```

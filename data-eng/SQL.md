@@ -7,7 +7,7 @@ SELECT TO_DATE(order_date, 'MM/DD/YYYY HH24:MI') AS order_date
 ```
 
 ## Snowflake example:
-> Very Simple ETL Pipeline in Snowflake: https://www.youtube.com/watch?v=x_4XUVgarqs
+> [Very Simple ETL Pipeline in Snowflake](https://www.youtube.com/watch?v=x_4XUVgarqs)
 
 **ONE** database with multiple *splits* (raw, analytics)
 

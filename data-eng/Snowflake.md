@@ -1,4 +1,4 @@
-```ad-important
+```ad-tldr
 title: What is Snowflake?
 A cloud-based data warehouse platform built to be used in the cloud (AWS, Azure, Google Cloud Platforms)
 ```
@@ -7,6 +7,10 @@ First analytics database solution in the cloud
 - runs entirely on *public cloud infrastructure*
 ## Snowflake's Architecture
 Built specifically for the *cloud*
+
+```ad-important
+Snowflake specifically pushes ELT because it separates storage from compute and offers *cheap storage* and *flexible compute*. Thus, loading raw data and then transforming in-warehouse (via `SQL` or `dbt`) is efficient and scalable.
+```
 
 Unique *multi-cluster* architecture delivers:
 - performance & efficiency
@@ -23,6 +27,10 @@ Handles:
 - availability
 
 Combines the benefits of *shared disk* and *shared nothing* architectures
+```ad-info
+**shared disk**: where multiple computers access the *same storage disk* simultaneously, allowing all nodes to read/write to a common storage pool
+**shared nothing**: partitions data across *independent nodes* (that have their own memory and storage) and only communicate with each other through a network -- best for scalability with more nodes
+```
 
 ### Data Warehouse Layers
 

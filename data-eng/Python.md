@@ -58,3 +58,5 @@ use `yield` to return the next iter value
 | **Inheritance**   | Reusability       | Pass down traits from a parent class to a child class. | Class syntax: `class Child(Parent):` |
 | **Polymorphism**  | Many forms        | Same method name, completely different behavior.       | Overriding methods across classes    |
 | **Abstraction**   | Hiding complexity | Show the user _what_ it does, hide _how_ it does it.   | `abc` module & `@abstractmethod`     |
+
+## Decorators

@@ -51,10 +51,13 @@ Example frameworks:
 - Purpose: analyze the business -- reporting, BI, trends
 - large operations, complex read `SELECT`s with `GROUP BY`s
 - optimized for fast reading over huge scans
+- Star schema
 - Examples: Snowflake, Redshift, BigQuery
 
 ```ad-info
 **normalized data**: reduces redundancy when writing multiple lines by splitting columns into multiple relations
+- pros: less storage, no update anomalies
+- cons: more joins -> slower reads
 ```
 
 
@@ -76,3 +79,14 @@ Example frameworks:
 
 **Grain**: the level of detail of *ONE ROW* in the fact table
 - e.g. "one row per order"
+
+## Slowly Changing Dimensions (SCD)
+|Type|What it does|History?|When to use|
+|---|---|---|---|
+|**Type 0**|Never changes (fixed/retain original)|N/A|Birth date, original signup|
+|**Type 1**|Overwrite old value|❌ No history|Correcting errors; history doesn't matter|
+|**Type 2**|Add a _new row_ with version flag / effective dates|✅ Full history|Most common; you need to track changes over time|
+|**Type 3**|Add a _new column_ (e.g., previous_value)|⚠️ Limited (one prior)|Only need to keep the immediately prior value|
+Type 2 is most common
+- Mechanism: keep old row, but mark it inactive with an `is_current` = FALSE column
+

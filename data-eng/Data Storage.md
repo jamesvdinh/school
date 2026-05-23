@@ -56,11 +56,15 @@ Example frameworks:
 
 ```ad-info
 **normalized data**: reduces redundancy when writing multiple lines by splitting columns into multiple relations
+- 1NF -> 2NF -> 3NF (each removes a type of redundancy/dependency)
 - pros: less storage, no update anomalies
 - cons: more joins -> slower reads
 ```
 
-
+**Normal Forms**
+- *1NF*: atomic values, no lists in a cell
+- *2NF*: 1NF + no partial dependency (non-key columns depend on multiple non-key columns)
+- *3NF*: 2NF + no transitive dependency (non-key columns don't depend on other non-key columns)
 ## Star vs Snowflake Schema
 ```ad-tldr
 **star**: fact table + *denormalized dimension tables* (1 level) -- used for simplicity and when storage costs low, *faster* query speed (less joins)
@@ -90,3 +94,7 @@ Example frameworks:
 Type 2 is most common
 - Mechanism: keep old row, but mark it inactive with an `is_current` = FALSE column
 
+## Data Modeling Approaches
+**Kimball** (bottom-up)
+- build dimensional data marts (star schemas)
+- integrate via conformed dimem

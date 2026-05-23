@@ -14,7 +14,7 @@ Snowflake specifically pushes ELT because it separates storage from compute and 
 
 Unique *multi-cluster* architecture delivers:
 - performance & efficiency
-	- computes queries using the massively parallel processing compute clusters -- each node in the cluster stores a part of the entire dataset locally
+	- computes queries using the *massively parallel processing* compute clusters -- each node in the cluster stores a part of the entire dataset locally
 - concurrency
 - elasticity
 
@@ -57,6 +57,8 @@ title: Structured vs Unstructured Data
 
 **Compute Layer**
 - made up of *virtual warehouses* that execute data processing tasks required by queries
+	- **virtual warehouses**: a *cluster* of compute resources (the "engine" that runs queries) -> can be resized
+	- multiple *VWs* can access the same data without conflicts
 - can access all data in storage later, then work independently to save resources
 	- allows for *non-disruptive* automatic scaling
 	- while queries run, compute resources can *scale* without the need to redistribute or rebalance data in the storage layer
@@ -74,6 +76,19 @@ title: Structured vs Unstructured Data
 By design, all layers are automatically *scalable* and are *redundant*
 ```
 
+## Data Storage Concepts
+```ad-tldr
+storage and compute scale *independently*; you pay for it *separately*.
+```
+
+**Data Partitioning** (micro-partitions)
+- data is auto-divided into small, compressed immutable columnar partitions
+- Snowflake stores min/max metadata per partition
+- *faster* query speed due to indexing on metadata
+
+**Zero-copy Cloning**
+- clone a table/schema/db instantly without duplicating storage using pointers =
+	- only adds to storage on data modification
 ## Designing a Database
 
 ### Step 1: create the DB
@@ -82,7 +97,7 @@ CREATE OR REPLACE DATABASE SALES_DB
 ```
 
 **Creating schemas**
-Databases usually only provide two basic schemas on creation: `INFORMATION_SCHEMA` and `PUBIC`
+Databases usually only provide two basic schemas on creation: `INFORMATION_SCHEMA` and `PUBLIC`
 ```sql
 CREATE SCHEMA IF NOT EXISTS SALES_DB.RAW
 CREATE SCHEMA IF NOT EXISTS SALES_DB.ANALYTICS

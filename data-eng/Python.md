@@ -60,3 +60,20 @@ use `yield` to return the next iter value
 | **Abstraction**   | Hiding complexity | Show the user _what_ it does, hide _how_ it does it.   | `abc` module & `@abstractmethod`     |
 
 ## Decorators
+```ad-example
+~~~py
+def logged(func):
+    def wrapper(*args, **kwargs):
+        print(f"calling {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@logged   # same as: greet = logged(greet)
+def greet(name):
+    return f"Hi {name}"
+
+greet("Sam")  # prints "calling greet", returns "Hi Sam"
+~~~
+```
+
+- `*args` and `**kwargs` (keyword args) accepts any signature

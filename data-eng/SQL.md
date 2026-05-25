@@ -21,6 +21,15 @@ Example:
 **`WHERE`**: filters rows
 **`HAVING`**: filters groups
 **`ORDER BY`**: can use `SELECT` alias
+### `FILTER`
+```sql
+SELECT
+	COUNT(*) FILTER (WHERE skill = 'laptop') AS laptop_views,
+	COUNT(*) FILTER (WHERE skill IN ('tablet', 'phone')) AS mobile_views
+FROM viewership
+```
+
+**BETWEEN**: inclusive
 ## `JOIN`s
 using `ON` vs `WHERE` on a `JOIN`
 - `ON` -> compares keys before joining

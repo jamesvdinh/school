@@ -85,6 +85,27 @@ curl -X POST -H "Content-Type: application/json" -d '{"text":"apple"}' 'http://1
 Note: every time you make a change in the code, the server will restart, resetting any variables
 ```
 
+### Fetching from a URL
+```python
+import requests
+
+API_URL = ""
+try:
+	res = requests.get(API_URL, timeout=5)
+	res.raise_for_status()  # checks for HTTP errors
+	data = res.json()
+	
+except Exception as e:
+	print(f"An unexpected error occured: {e}")
+```
+### Reading a file
+```python
+import json
+
+with open("./data/papers.json") as f:
+	papers = json.load(f)
+```
+
 ### Error handling
 Use **HTTPException**
 ```python
@@ -98,6 +119,10 @@ def get_item(item_id: int) -> str:
 		raise HTTPException(status_code=404, detail=f"Item {item_id} not found")
 ```
 
+**Status 400**: Bad Request
+- invalid arguments
+**Status 404**: Page not found
+- item not found in items
 ### Pydantic Types
 ```python
 from pydantic import BaseModel
@@ -116,4 +141,27 @@ Helpful when you want the frontend client (e.g. React) to interact with FastAPI 
 
 @app.get("/items/{item_id}", response_model=Item)
 ...
+```
+
+### Pagination
+**Offset**: gets the correct index for the start of the page
+```python
+def paginate(items: list, page: int = 1, page_size: int = 10) -> dict:
+	total = len(items)
+	total_pages = math.ceil(total / page_size) if total else 1
+	if page < 1 or page > total_pages:
+		raise HTTPException(status_code=400, detail=f"Page must be between 1 and {total_pages}")
+	offset = (page - 1) * page_size
+	return {
+	"data": items[offset:offset + page_size],
+	"pagination":
+		{
+			"page": page,
+			"page_size": page_size,
+			"total": total,
+			"total_pages": total_pages,
+			"has_next": page < total_pages,
+			"has_prev": page > 1
+		}
+	}
 ```

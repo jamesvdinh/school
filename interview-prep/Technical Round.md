@@ -99,12 +99,31 @@ except Exception as e:
 	print(f"An unexpected error occured: {e}")
 ```
 ### Reading a file
+In general:
 ```python
 import json
 
 with open("./data/papers.json") as f:
 	papers = json.load(f)
 ```
+Note: use `with open` for massive datasets
+
+Use `asynccontextmanager` for explicit lifestyle, easier test, and easier to swap data source
+```python
+import json
+from pathlib import Path
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+	app.state.papers = json.loads(Path("./data/papers.json").read_text())
+	yield
+	
+app = FastAPI(lifespan=lifespan)
+```
+Note: the `yield` signals when the app can start handling requests
+- before `yield`: startup
+- after `yield`: shutdown
 
 ### Error handling
 Use **HTTPException**
@@ -120,9 +139,12 @@ def get_item(item_id: int) -> str:
 ```
 
 **Status 400**: Bad Request
-- invalid arguments
+- client sent something invalid
+- invalid query params
 **Status 404**: Page not found
-- item not found in items
+- resource doesn't exist (e.g. id not in list)
+**Status 500**: Internal Server Error
+- developer bug -> reserve for unexpected crashes
 ### Pydantic Types
 ```python
 from pydantic import BaseModel
@@ -164,4 +186,75 @@ def paginate(items: list, page: int = 1, page_size: int = 10) -> dict:
 			"has_prev": page > 1
 		}
 	}
+```
+
+**At scale** -> use *cursor-based* pagination
+- instead of an offset, use an opaque cursor pointing to last seen ID
+```sh
+GET /papers?limit=20&cursor=eyJpZCI6InBhcGVyXzAwNTAifQ==
+```
+
+### Resolving CORS issues
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+- `allow_origins`: include your local dev React server
+## React, Node.js
+
+### Setup
+using **create-react-app**
+```sh
+npx create-react-app .
+```
+
+using **Vite** (faster)
+```sh
+npm create vite@latest . -- --template react-ts
+```
+
+using **Next.js** (for SEO, SSR, and for JS backend/frontend)
+```sh
+npx create-next-app@latest . --typescript
+```
+
+### Fetching from API
+use **fetch** for lightweight load, modern usage
+```typescript
+const [items, setItems] = useState([]);
+
+const API_URL = "https://api.example.com/v1";
+
+const res = await fetch(API_URL);
+if (!res.ok) throw new Error(`HTTP ${res.status}`);
+res.then(res => res.json())
+	.then(data => setItems(data));
+```
+
+Robust option: define an `async function` outside the component, then call it in a `useEffect`
+
+```typescript
+async function fetchPapers(params) {
+	const res = await fetch(API_URL);
+	if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	return res.json() as Promise;
+}
+
+function App() {
+	const [papers, setPapers] = useState();
+	
+	useEffect(() => {
+		if (!query) return;
+		fetchPapers(query)
+			.then((data) => setPapers(data.data))
+			.catch(console.error);
+	});
+	...
+}
 ```

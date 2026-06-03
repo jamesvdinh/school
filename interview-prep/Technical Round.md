@@ -278,6 +278,15 @@ export default defineConfig({
 }
 ```
 
+| Attribute                       | Tailwind Equivalent |
+| ------------------------------- | ------------------- |
+| display: flex                   | flex                |
+| flex-direction: column          | flex-col            |
+| width/height: 100%              | w-full, h-full      |
+| width: var(--spacing) * 12      | w-12                |
+| width: auto, height: auto       | size-auto           |
+| background-color: (white, 0.60) | bg-white/60         |
+
 ### Components
 **Inputs**
 ```ts
@@ -325,6 +334,18 @@ function Parent() {
 }
 ```
 
+**Loading Spinner**
+```ts
+type LoadingSpinnerProps = {
+	status: boolean;
+};
+
+function LoadingSpinner({ status }: LoadingSpinnerProps) {
+	return (
+		<div className={fixed inset-0 flex justify-center items-center bg-white/60}>
+	)
+}
+```
 ### Type vs Interface
 ```ts
 interface User { name: string; }

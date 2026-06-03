@@ -286,6 +286,10 @@ export default defineConfig({
 | width: var(--spacing) * 12      | w-12                |
 | width: auto, height: auto       | size-auto           |
 | background-color: (white, 0.60) | bg-white/60         |
+| z-index: 1                      | z-1                 |
+| border: 4px solid               | border-4            |
+| border-color: light gray        | border-gray-200     |
+| animation: spin                 | animate-spin        |
 
 ### Components
 **Inputs**
@@ -342,9 +346,21 @@ type LoadingSpinnerProps = {
 
 function LoadingSpinner({ status }: LoadingSpinnerProps) {
 	return (
-		<div className={fixed inset-0 flex justify-center items-center bg-white/60}>
-	)
+		<div className={`fixed inset-0 flex justify-center items-center bg-white/60 backdrop-blur-sm z-50 {!status ? "hidden" : ""}`}>
+			<div className="w-12 h-12 rounded-full border-4 border-gray-200 animate-spin" />
+		</div>
+	);
 }
+```
+Then, in `App.tsx`, create a new useState
+```ts
+const [loading, setLoading] = useState(false);
+const search = async () => {
+	setLoading(true);
+	// fetch data...
+	setResults(data);
+	setLoading(false);
+};
 ```
 ### Type vs Interface
 ```ts
@@ -362,3 +378,53 @@ type User { age: number; } // Error: duplicate def
 **Interface**
 - can only describe object shapes and functions/classes
 - cannot represent unions or primirives directly
+
+### `setTimeout` and `setInterval`
+**`setTimeout(callback, delay, ...args)`**
+Runs after $\dfrac{delay}{1000}$ seconds
+```ts
+const timeoutId = setTimeout((name) => {
+	console.log(`Hello, ${name}`);
+}, 2000, "Alice"); // "Alice" passed as an arg
+// console: "Hello, Alice"
+```
+
+**`setInterval(callback, delay, ...args`**
+Runs every $\dfrac{delay}{1000}$ seconds
+```ts
+const intervalId = setInterval(() => {
+	console.log("Tick");
+}, 1000);
+```
+
+**clearing timers**
+```ts
+clearTimeout(timeoutId);
+clearInterval(intervalId);
+```
+
+**Real app use**
+```ts
+useEffect(() => {
+	const timeoutId = setTimeout(() => {
+		console.log(`Hi, ${name}`);
+	}, 1000) // after 1 sec... console: "Hi, {name}"
+	
+	// cleanup function
+	return () => {
+		clearTimout(timeoutId);
+	};
+}, [name]);
+```
+
+```ad-important
+The timeout delay represnts the *minimum* time to wait, not the guaranteed time until the callback is run.
+~~~ts
+console.log(1);
+setTimeout(() => console.log(2), 0);
+console.log(3);
+// 1, 3, 2
+~~~
+even with a 0 ms delay, the timeout must wait for the **synchronous** script to finish
+```
+

@@ -231,16 +231,18 @@ const [items, setItems] = useState([]);
 
 const API_URL = "https://api.example.com/v1";
 
-const search = async () => {
-	try {
-		const res = fetch(`${API_URL}/papers`);
-		if (!res.ok) throw new Error(`HTTP ${res.status}`);
-		const data = await res.json();
-		setItems(data);
-	} catch (err) {
-		console.error(err);
+useEffect(() => {
+	const search = async() => {
+		try {
+			const res = fetch(`${API_URL}/papers`);
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			const data = await res.json();
+			setItems(data);
+		} catch (err) {
+			console.error(err);
+		}
 	}
-}
+}, []);
 ```
 
 ```ad-important

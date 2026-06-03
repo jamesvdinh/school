@@ -231,30 +231,111 @@ const [items, setItems] = useState([]);
 
 const API_URL = "https://api.example.com/v1";
 
-const res = await fetch(API_URL);
-if (!res.ok) throw new Error(`HTTP ${res.status}`);
-res.then(res => res.json())
-	.then(data => setItems(data));
+const search = async () => {
+	try {
+		const res = fetch(`${API_URL}/papers`);
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const data = await res.json();
+		setItems(data);
+	} catch (err) {
+		console.error(err);
+	}
+}
 ```
 
-Robust option: define an `async function` outside the component, then call it in a `useEffect`
+```ad-important
+Always wrap fetch requests in an *event handler* or **`useEffect`** hook with an empty dependency
+```
 
+**General React logic loop**:
+1. user does something (click, types, selects)
+2. state updates (**`useState`**)
+3. side effects run (**`useEffect`**, onClick)
+4. response comes back and *updates* more state
+5. react *re-renders* based on new state
+
+### Install Tailwind
+1. Install
+```sh
+npm i tailwindcss @tailwindcss/vite
+```
+
+2. Add plugin to `vite.config.ts`
 ```typescript
-async function fetchPapers(params) {
-	const res = await fetch(API_URL);
-	if (!res.ok) throw new Error(`HTTP ${res.status}`);
-	return res.json() as Promise;
-}
+export default defineConfig({
+	plugins: [react(), tailwindcss()],
+})
+```
 
-function App() {
-	const [papers, setPapers] = useState();
-	
-	useEffect(() => {
-		if (!query) return;
-		fetchPapers(query)
-			.then((data) => setPapers(data.data))
-			.catch(console.error);
-	});
+3. Add the import to `index.css`
+```css
+@import "tailwindcss";
+
+.other-class{
 	...
 }
 ```
+
+### Components
+**Inputs**
+```ts
+<input type="text" onChange={(e) => setQuery(e.target.value)} />
+
+<button onClick={search}>Search Papers</button>
+```
+
+**Mapping a list**
+```ts
+<div className="flex flex-col">
+	{results?.data.length > 0 ? (
+		results?.data.map((paper) => (
+			<div key={paper.id}>{paper.title}</div>
+		))
+	) : (
+		<span>No papers found.</span>
+	)}
+</div>
+```
+
+```ad-important
+**#1** bug when data is not displaying -> check if *nested in schema*!!!
+
+also, make sure to check for null object with `res?.data`
+```
+
+**Passing in props to a child component**
+```ts
+interface ChildProps {
+	mode: string;
+	setMode: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function Child({ value, setValue }: ChildProps) {
+	return ...
+}
+
+function Parent() {
+	const [value, setValue] = useState<string>("");
+	
+	return(
+		<Child value={value} setValue={setValue} />
+	)
+}
+```
+
+### Type vs Interface
+```ts
+interface User { name: string; }
+interface User { age: number; } // User now has name and age
+
+type User { name: string; }
+type User { age: number; } // Error: duplicate def
+```
+
+**Type**
+- much more powerful
+- can represent primitives, unions (`string | number`), intersections, tuples, and mapped types
+
+**Interface**
+- can only describe object shapes and functions/classes
+- cannot represent unions or primirives directly

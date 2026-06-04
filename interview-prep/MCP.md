@@ -2,15 +2,49 @@
 **MCP**: Model Context Protocol
 **FastAPI**: Anthropic's official SDK for building MCP servers
 
+### Primitives
 
+| **Feature**   | **Description**                                                                                                                                                                 | **Examples**                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Tools**     | Functions that the LLM can *actively call* and decide when to use based on the prompt. Tools can write to DBs, call external APIs, modify files, etc. (controlled by **model**) | search flights, send messages, create calendar events |
+| **Resources** | Passive data sources that provide *read-only* access to information for context such as file contents, DB schemas, or API docs (controlled by **app**)                          | retrieve files, access knowledge DBs, read calendars  |
+| **Prompts**   | Pre-built instruction *templates* that tell model to work with specific tools and resources (controlled by **user**)                                                            | plan a vacation, summarize meetings, draft an email   |
 
 ## Medical Imaging MCP Project
-Structure:
-- define a SemanticScholarClient class that defines all the methods of requesting from SemanticScholar API
+**Structure**
+- define a `SemanticScholarClient` class that defines all the methods of requesting from *SemanticScholar API*
 	- this gives a structured object to invoke queries from
-- define the mcp server with all tools
+- define the *MCP server* with all tools
 	- Define the tool description and args in a docstring
 	- FastAPI then registers them with the server
+
+Setup `SemanticScholarClient` class with API endpoints
+```python
+import requests
+
+class SemanticScholarClient:
+	API_URL = "https://api.semanticscholar.org/graph/v1"
+	timeout = 10
+	
+	def __init__(self, api_key: str = None):
+		self.session = requests.Session()
+		if api_key:
+			self.session.headers["x-api-key"] = api_key
+			
+	def search_papers(query: str, fields: list[str] = None, limit: int = 10):
+		params = {
+			"query": query,
+			"limit": limit,
+		}
+		if fields:
+			params["fields"] = ",".join(fields)
+		
+		res = requests.get(f"{self.API_URL}/paper/search", params=params, timeout=self.timeout)
+		res.raise_for_status()
+		return res.json()
+		
+	...
+```
 
 Setup MCP, load config
 ```python

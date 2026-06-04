@@ -29,10 +29,6 @@ def create_new_list() -> ListNode:
 ~~~
 ```
 
-## Model Context Protocol (MCP)
-**Drawbacks**
-
-
 ## Python + FastAPI
 ### Virtual Environments (venv)
 ```sh
@@ -48,8 +44,7 @@ FastAPI is async by default -> fast & efficient
 
 Basic setup
 ```sh
-pip install fastapi
-pip install uvicorn
+pip install fastapi uvicorn
 ```
 
 Run the server
@@ -61,7 +56,7 @@ uvicorn main:app --reload
 `main.py`
 
 ```python
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 items = []
@@ -162,6 +157,9 @@ def get_item(item_id: int) -> str:
 - resource doesn't exist (e.g. id not in list)
 **Status 500**: Internal Server Error
 - developer bug -> reserve for unexpected crashes
+**Status 502**: Bad Gateway Error
+- server receives invalid response
+- bad api query params
 ### Pydantic Types
 ```python
 from pydantic import BaseModel

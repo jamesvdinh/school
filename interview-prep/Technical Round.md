@@ -110,6 +110,28 @@ try:
 except Exception as e:
 	print(f"An unexpected error occured: {e}")
 ```
+
+**Class Structure**
+```python
+import requests
+
+class MyClass:
+	API_URL = "..."
+	def __init__(self, api_key: str = None):
+		self.session = requests.Session()
+		if api_key:
+			self.session.headers["x-api-key"] = api_key
+```
+
+**With API Key**
+```python
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.getenv("API_KEY")  # in .env
+client = MyClass(API_KEY)
+```
 ### Reading a file
 In general:
 ```python

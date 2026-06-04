@@ -34,6 +34,16 @@ def create_new_list() -> ListNode:
 
 
 ## Python + FastAPI
+### Virtual Environments (venv)
+```sh
+python -m venv venv
+source venv/bin/activate
+```
+**to install packages**
+```sh
+python -m pip install <package>
+```
+### Setup
 FastAPI is async by default -> fast & efficient
 
 Basic setup
@@ -58,7 +68,7 @@ items = []
 
 @app.get("/")  # root
 def root():
-	return {"Hello": "World"}
+	return {"Hello World"}
 	
 
 # routes
@@ -71,6 +81,13 @@ def create_item(item: str):
 @app.get("/items")
 def list_items(limit: int = 10):
 	return items[:limit]
+	
+@app.get("/items/{id}")
+def get_item(id: int):
+	if id < 0 or id > len(items) - 1:
+		raise HTTPException(status_code=400, detail="ID not found in items")
+	item = items[id]
+	return item
 ```
 
 test the `/items` POST
@@ -108,7 +125,7 @@ with open("./data/papers.json") as f:
 ```
 Note: use `with open` for massive datasets
 
-Use `asynccontextmanager` for explicit lifestyle, easier test, and easier to swap data source
+Use `asynccontextmanager` for explicit lifespan, easier test, and easier to swap data source
 ```python
 import json
 from pathlib import Path

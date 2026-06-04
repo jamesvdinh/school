@@ -166,7 +166,7 @@ def get_item(item_id: int) -> str:
 ```python
 from pydantic import BaseModel
 
-class Task(BaseModel):
+class Item(BaseModel):
 	text: str = None
 	is_done: bool = False
 ```

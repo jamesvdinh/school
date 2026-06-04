@@ -206,6 +206,19 @@ app.add_middleware(
 )
 ```
 - `allow_origins`: include your local dev React server
+
+**adding new fields to a `dict`**
+```python
+old_dict = {
+	"name": "Alice",
+	"age": 20
+}
+
+new_dict = {
+	**old_dict,
+	"email": "alice@example.com"
+}
+```
 ## React, Node.js
 
 ### Setup
@@ -362,6 +375,7 @@ const search = async () => {
 	setLoading(false);
 };
 ```
+
 ### Type vs Interface
 ```ts
 interface User { name: string; }
@@ -426,5 +440,85 @@ console.log(3);
 // 1, 3, 2
 ~~~
 even with a 0 ms delay, the timeout must wait for the **synchronous** script to finish
+```
+
+**Recursive `setTimeout` vs `setInterval`**
+```
+|----------|----------|
+    ^      ^   ^
+  200ms  500ms 700ms
+```
+
+`setInterval` *includes* execution time of the callback fxn
+- if fxn takes **200ms** to run and delay is **500ms**, then the next fxn execution happens at the end of that delay (**500ms** from start)
+- executions can stack without break
+
+recursive `setTimout` *excludes* execution time
+- if fxn takes **700ms** to run and delay is **500ms**, then the next fxn execution happens at **1200ms** from start
+- guaranteed fixed gap between execution end and next execution start
+- safer for heavy 
+
+### Race Conditions
+Use `useRef` and `AbortController` for handling multiple requests in a short time span
+```ts
+import {useRef} from "react";
+
+const search = async () => {
+	abortRef.current?.abort();
+	const controller = new AbortController();
+	abortRef.current = controller;
+	
+	setLoading(true);
+	try {
+		const res = await fetch(`${API_URL}/papers`, {
+			signal: controller.signal,
+		});
+		...
+	} catch (err) {
+		if (err.name === "AbortError") return;
+		setLoading(false);
+		throw err;
+	}
+}
+```
+1. *abort* any current requests
+2. *set* the new request as controller's signal
+3. *maintain* the loading state of the new request in the `catch` by returning on an abort error
+
+### Debounce
+Delays execution until a period of inactivity passes. If the function is called again before the delay expires, the timer resets
+- perfect for use in *search-as-you-type* apps
+```ts
+useEffect(() => {
+	const id = setTimeout() => {
+		setPage(1);
+		search(1)
+	}, 300);
+	return () => clearTimeout(id); // cancel if query/mode changes before 300ms
+}, [query, mode])
+```
+### Caching
+Stores prior results by their request key so repeat fetches skip fetching entirely. Only recommended if data updates are infrequent.
+
+```ts
+const cacheRef = useRef<Map<string, PapersResponse>>(new Map());
+
+const search = async () => {
+	...
+	const cacheKey = paperParams.toString();
+	if (cacheRef.current.has(cacheKey)) {
+		setResults(cacheRef.current.get(cacheKey)!);
+		return;
+	}
+	
+	try {
+		...
+		cacheRef.current.set(cacheKey, data);
+	}
+}
+```
+
+```ad-info
+If data updates are frequent, skip caching or add a TTL (store { data, timestamp } and invalidate after N minutes)
 ```
 

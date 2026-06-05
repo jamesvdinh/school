@@ -27,13 +27,13 @@ A reference for entry-level full-stack interviews at AI-infrastructure companies
 
 **HTTP methods (the ones that matter):**
 
-| Method | Purpose | Idempotent? | Safe? |
-|---|---|---|---|
-| `GET` | Read a resource | Yes | Yes |
-| `POST` | Create a resource (or "do something") | No | No |
-| `PUT` | Replace a resource entirely | Yes | No |
-| `PATCH` | Partially update a resource | No (often) | No |
-| `DELETE` | Remove a resource | Yes | No |
+| Method   | Purpose                               | Idempotent? | Safe? |
+| -------- | ------------------------------------- | ----------- | ----- |
+| `GET`    | Read a resource                       | Yes         | Yes   |
+| `POST`   | Create a resource (or "do something") | No          | No    |
+| `PUT`    | Replace a resource entirely           | Yes         | No    |
+| `PATCH`  | Partially update a resource           | No (often)  | No    |
+| `DELETE` | Remove a resource                     | Yes         | No    |
 
 *Idempotent* = calling it N times has the same effect as calling it once. *Safe* = doesn't change server state.
 

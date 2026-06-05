@@ -166,10 +166,10 @@ from fastapi import HTTPException
 
 @app.get("/items/{item_id}")
 def get_item(item_id: int) -> str:
-	if item_id < len(items):
-		return items[item_id]
-	else:
+	item = next((i for i in items if i["item_id"] == id), None)
+	if item is None:
 		raise HTTPException(status_code=404, detail=f"Item {item_id} not found")
+	return item
 ```
 
 **Status 400**: Bad Request
@@ -256,6 +256,55 @@ new_dict = {
 	"email": "alice@example.com"
 }
 ```
+
+## Filtering
+By keyword
+```python
+def get_papers(title: str = "", limit: int = 10):
+	filtered []
+	for paper in papers:
+		if title and title.lower() not in paper["title"]:
+			continue
+		filtered.append(paper)
+	return filtered[:limit]
+```
+
+By semantic meaning
+```python
+import torch
+import torch.nn.functional as F
+
+def filter_semantic(query: str = "", k: int = 20):
+	q_emb = embed_text(query)
+	q = torch.tensor(q_emb)  # or any tensorizor
+	scores = []
+	for paper in papers:
+		paper_id = paper["id"]
+		p_emb = embeddings["embeddings"][paper_id]
+		p = torch.tensor(p_emb)
+		sim = F.cosine_similarity(q.unsqueeze(0), p.unsqueese(0)).item()
+		scores.append({"id": paper_id, "score": sim})
+	
+	scores.sort(key=lambda x: x["score"], reverse=True)
+	k_nearest = scores[:k]  # gets closest paper ids
+	...
+```
+**torch.tensor**
+- used to move vectors from CPU to GPU
+- used to work with pytorch functions
+
+**Cosine Similarity**: a metric used to measure how similar two vectors are, regardless of size
+- measures angle between the vectors
+- outputs score between -1 and 1
+	- 1: highly similar
+	- 0: orthogonal/unrelated
+	- -1: highly not similar
+$$Similarity(A,B) = cos(\theta) = \dfrac{A*B}{||A||*||B||}$$
+
+```ad-info
+title: Which strategy is best?
+Best to use a hybrid (keyword + semantic) model for matching queries to paper fields
+```
 ## React, Node.js
 
 ### Setup
@@ -282,9 +331,9 @@ const [items, setItems] = useState([]);
 const API_URL = "https://api.example.com/v1";
 
 useEffect(() => {
-	const search = async() => {
+	const search = async () => {
 		try {
-			const res = fetch(`${API_URL}/papers`);
+			const res = await fetch(`${API_URL}/papers`);
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			const data = await res.json();
 			setItems(data);
@@ -297,6 +346,8 @@ useEffect(() => {
 
 ```ad-important
 Always wrap fetch requests in an *event handler* or **`useEffect`** hook with an empty dependency
+
+**Also**: leave the trailing `/` off of URLs!
 ```
 
 **General React logic loop**:

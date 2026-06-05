@@ -10,6 +10,21 @@
 | **Resources** | Passive data sources that provide *read-only* access to information for context such as file contents, DB schemas, or API docs (controlled by **app**)                          | retrieve files, access knowledge DBs, read calendars  |
 | **Prompts**   | Pre-built instruction *templates* that tell model to work with specific tools and resources (controlled by **user**)                                                            | plan a vacation, summarize meetings, draft an email   |
 
+### Transports
+**Transports** carry JSON-RPC messages between an MCP client and MCP server
+
+**stdio** (Standard Input/Output): operates via direct process-to-process communication on a single machine
+- latency: ultra-low
+- lifecycle: 1:1, server process lives and dies with the client
+- security & auth: high baseline security b/c cut off from internet
+
+**remote HTTP servers** (Streamable HTTP): transforms MCP server into a standard web service reachable over a network
+- server runs independently on cloud, Docker container, or Kubernetes cluster
+- exposes a public or private HTTP endpoint
+	- client sents JSON-RPC requests via *POST*
+- latency: variable, depends on network distance, internet routing, TLS handshakes
+- lifecycle: persistent and decoupled; server runs continuously
+- security & auth: standard web security; exposed to network so must be secured using *HTTPS*, rate limiting, and OAuth/API keys
 ## Medical Imaging MCP Project
 **Structure**
 - define a `SemanticScholarClient` class that defines all the methods of requesting from *SemanticScholar API*

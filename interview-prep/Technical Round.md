@@ -300,6 +300,10 @@ def filter_semantic(query: str = "", k: int = 20):
 	- 0: orthogonal/unrelated
 	- -1: highly not similar
 $$Similarity(A,B) = cos(\theta) = \dfrac{A*B}{||A||*||B||}$$
+**Embedding**: a way to translate real-world data (words, sentences, images) into a list of numbers that a computer can understand
+- captures meaning and context, transforming data into *vectors* in multi-dimensional geometric space
+- similar meanings sit close to one another
+- "King" & "Queen" similar
 
 ```ad-info
 title: Which strategy is best?

@@ -350,6 +350,23 @@ Always wrap fetch requests in an *event handler* or **`useEffect`** hook with an
 **Also**: leave the trailing `/` off of URLs!
 ```
 
+**Passing queries in the fetch URL**
+```ts
+const [query, setQuery] = useState({});
+const search = async () => {
+	const params = new URLSearchParams(
+		Object.entries(query).filter(([, v]) => v !== "")
+	);
+	const res = await fetch(`${API_URL}/papers?${params}`);
+	...
+}
+
+return  (
+	<input type="text" onChange={(e) => setQuery({...query, title: e.target.value})} />
+	...
+)
+```
+
 **General React logic loop**:
 1. user does something (click, types, selects)
 2. state updates (**`useState`**)

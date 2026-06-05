@@ -1,10 +1,10 @@
-# Valency Technical Interview Cheat Sheet
+## Valency Technical Interview Cheat Sheet
 
 A reference for entry-level full-stack interviews at AI-infrastructure companies, calibrated to Valency Bond's stack (MCP servers, retrieval over research papers, AI assistant integration).
 
 ---
 
-## Table of Contents
+### Table of Contents
 
 1. [HTTP & REST APIs](#1-http--rest-apis)
 2. [Async Programming](#2-async-programming)
@@ -19,9 +19,9 @@ A reference for entry-level full-stack interviews at AI-infrastructure companies
 
 ---
 
-## 1. HTTP & REST APIs
+### 1. HTTP & REST APIs
 
-### Core concepts
+#### Core concepts
 
 **Request/response cycle:** client sends a request (method, URL, headers, optional body), server responds (status code, headers, body). Stateless by default — each request stands alone unless you add cookies, tokens, or session storage.
 
@@ -53,7 +53,7 @@ A reference for entry-level full-stack interviews at AI-infrastructure companies
 - `X-RateLimit-Remaining` — common rate-limit header
 - `Retry-After: 30` — server says wait N seconds
 
-### REST conventions
+#### REST conventions
 
 ```
 GET    /papers           → list papers
@@ -70,7 +70,7 @@ GET    /papers/123/citations  → citations of paper 123
 POST   /papers/123/comments   → add a comment to paper 123
 ```
 
-### Pagination
+#### Pagination
 
 Three common patterns:
 
@@ -90,7 +90,7 @@ The cursor is opaque (often base64-encoded), points to a position in the result 
 GET /papers?page=3&per_page=20
 ```
 
-### Rate limiting
+#### Rate limiting
 
 How servers protect themselves. Common strategies:
 
@@ -104,7 +104,7 @@ What to do as a client:
 3. Respect `Retry-After`
 4. Implement **exponential backoff** with jitter: wait 1s, 2s, 4s, 8s + random jitter, give up after N retries
 
-### REST vs. alternatives
+#### REST vs. alternatives
 
 | Approach | Pros | Cons |
 |---|---|---|
@@ -116,21 +116,21 @@ What to do as a client:
 title: Remote Procedure Call (RPC)
 An action in which a computer program causes a procedure to execute in a different address space of the current process.
 ```
-### Interview-ready talking point
+#### Interview-ready talking point
 
 > "REST is great for resource-shaped data, but when I built the Darena MCP server, REST wasn't the right abstraction — the LLM needed to invoke *actions* with typed arguments, not just CRUD resources. MCP fills that gap by giving you a typed RPC layer designed for LLM tool calls."
 
 ---
 
-## 2. Async Programming
+### 2. Async Programming
 
-### Why async matters
+#### Why async matters
 
 A typical web request spends most of its time *waiting* — for the DB, an external API, a file read. Synchronous code blocks the whole thread during that wait. Async lets one thread juggle many waiting operations.
 
 For an MCP server hitting Semantic Scholar + an embedding API + a database for every query, async isn't optional — it's the difference between handling 10 concurrent users and 1000.
 
-### Python: `async`/`await`
+#### Python: `async`/`await`
 
 ```python
 import asyncio
@@ -160,7 +160,7 @@ papers = asyncio.run(fetch_many(["123", "456", "789"]))
 
 **Concurrency vs. parallelism:** Python's async is *concurrent*, not parallel — one thread, one event loop, switching between tasks at `await` points. For CPU-bound work, use `multiprocessing` or threads instead.
 
-### JavaScript: Promises & async/await
+#### JavaScript: Promises & async/await
 
 ```javascript
 // Promise-based
@@ -199,7 +199,7 @@ const results = await Promise.all(ids.map(fetchPaper));
 - `Promise.race([...])` — first to settle wins (great for timeouts)
 - `Promise.any([...])` — first to fulfill wins; rejects only if all reject
 
-### Common async pitfalls
+#### Common async pitfalls
 
 | Pitfall | Symptom | Fix |
 |---|---|---|
@@ -209,15 +209,15 @@ const results = await Promise.all(ids.map(fetchPaper));
 | Unhandled promise rejection | Silent failure | Wrap in try/catch or `.catch()` |
 | Async in a sync context | "Coroutine was never awaited" warning | Use `asyncio.run` at boundary |
 
-### Interview talking point
+#### Interview talking point
 
 > "When I was building the MCP server, every tool call hits the DB and often an external API. Doing those sequentially would have made even simple queries painful. I structured the tool handlers async and used `asyncio.gather` to fan out parallel calls when a tool needed multiple data sources — like fetching a paper's metadata and its citation graph concurrently."
 
 ---
 
-## 3. Databases: Relational vs. Vector
+### 3. Databases: Relational vs. Vector
 
-### Relational (PostgreSQL, MySQL, SQLite)
+#### Relational (PostgreSQL, MySQL, SQLite)
 
 Store structured data in tables with rows and columns. Use SQL to query. Strong consistency, transactions (ACID), schemas enforce structure.
 
@@ -279,7 +279,7 @@ Rules of thumb:
 - **Isolation** — concurrent transactions don't see each other's partial state
 - **Durability** — committed data survives crashes
 
-### NoSQL (MongoDB, DynamoDB, Redis)
+#### NoSQL (MongoDB, DynamoDB, Redis)
 
 Different data models — document, key-value, wide-column, graph. Generally trade consistency for scalability and flexibility.
 
@@ -290,7 +290,7 @@ Different data models — document, key-value, wide-column, graph. Generally tra
 | Wide-column | Cassandra | Time series, huge writes |
 | Graph | Neo4j | Citation graphs, social networks |
 
-### Vector databases
+#### Vector databases
 
 Store high-dimensional vectors (embeddings) and query by *similarity* rather than equality. Essential for semantic search and RAG.
 
@@ -307,7 +307,7 @@ Store high-dimensional vectors (embeddings) and query by *similarity* rather tha
 
 **For a startup of Valency's size, my bet is pgvector** — they likely keep relational metadata and vectors in one Postgres instance. Worth being able to discuss.
 
-### When to use what
+#### When to use what
 
 | Scenario | Use |
 |---|---|
@@ -317,15 +317,15 @@ Store high-dimensional vectors (embeddings) and query by *similarity* rather tha
 | Citation graph traversal | Relational (recursive CTE) or graph DB |
 | User sessions | Key-value or relational |
 
-### Interview talking point
+#### Interview talking point
 
 > "For the MCP server I'm building, I'm using Postgres with pgvector. The relational side handles paper metadata, authors, and citation edges. The vector side stores embeddings of titles and abstracts. Keeping them in one DB means I can do hybrid queries — semantic similarity filtered by year, venue, or citation count — with a single SQL statement, instead of orchestrating two systems."
 
 ---
 
-## 4. Embeddings & Semantic Search
+### 4. Embeddings & Semantic Search
 
-### What an embedding is
+#### What an embedding is
 
 A function `text → vector` (typically 384–3072 floats) where semantically similar text produces vectors that are close in the vector space. Generated by a neural network trained on huge text corpora.
 
@@ -335,7 +335,7 @@ A function `text → vector` (typically 384–3072 floats) where semantically si
 "recipe for chocolate cake"           → [-0.62, 0.91, 0.04, ...]  (far)
 ```
 
-### How similarity is measured
+#### How similarity is measured
 
 **Cosine similarity** — measures the *angle* between two vectors, not their magnitude.
 
@@ -354,7 +354,7 @@ Range: `-1` (opposite) to `1` (identical). For normalized embeddings (length 1),
 
 Most embedding models produce normalized vectors, so cosine ≈ dot product.
 
-### Embedding models
+#### Embedding models
 
 | Model | Provider | Dim | Notes |
 |---|---|---|---|
@@ -364,7 +364,7 @@ Most embedding models produce normalized vectors, so cosine ≈ dot product.
 | `all-MiniLM-L6-v2` | Sentence Transformers (open) | 384 | Tiny, fast, runs locally |
 | `bge-large-en` | BAAI (open) | 1024 | Open, competitive quality |
 
-### Semantic search pipeline
+#### Semantic search pipeline
 
 1. **Index time** — for each document, generate an embedding, store `(id, text, embedding)` in vector DB.
 2. **Query time** — embed the query, find K nearest vectors, return their documents.
@@ -378,7 +378,7 @@ ORDER BY embedding <=> $1   -- <=> is cosine distance
 LIMIT 10;
 ```
 
-### Why combine semantic + keyword
+#### Why combine semantic + keyword
 
 Semantic search is great for paraphrases ("attention models" ≈ "transformer architectures") but **bad at exact matches** — author names, specific dataset names, acronyms.
 
@@ -393,9 +393,9 @@ Semantic search is great for paraphrases ("attention models" ≈ "transformer ar
 score(doc) = sum over methods m of 1 / (k + rank_m(doc))
 ```
 
-3. Optionally **rerank** the top results with a cross-encoder (e.g., `cross-encoder/ms-marco-MiniLM-L-6-v2`) — slower but much more accurate, so you only run it on the top 50–100.
+1. Optionally **rerank** the top results with a cross-encoder (e.g., `cross-encoder/ms-marco-MiniLM-L-6-v2`) — slower but much more accurate, so you only run it on the top 50–100.
 
-### Chunking (for long documents)
+#### Chunking (for long documents)
 
 Embeddings degrade for long text. For papers, common approach:
 
@@ -405,25 +405,25 @@ Embeddings degrade for long text. For papers, common approach:
 
 For Valency's domain, you'd likely embed at the paper level (title + abstract) and possibly at the section level for deeper retrieval.
 
-### Interview talking point
+#### Interview talking point
 
 > "Pure semantic search has a known weakness — it's bad at exact-term matching. For research papers, that's a real problem because users often query by author name or specific dataset. So I'd combine BM25 for keyword matching with embedding-based semantic search, fuse the results with RRF, and rerank the top 50 with a cross-encoder. Most production retrieval systems end up looking something like this."
 
 ---
 
-## 5. MCP (Model Context Protocol)
+### 5. MCP (Model Context Protocol)
 
 This is your strongest area — make sure you can articulate it cleanly.
 
-### What MCP is
+#### What MCP is
 
 An open protocol from Anthropic that standardizes how AI assistants connect to external data sources and tools. Think of it as "USB-C for LLMs" — a typed, language-agnostic way for an LLM client (Claude Desktop, Cursor, etc.) to discover and invoke capabilities from any compliant server.
 
-### Architecture
+#### Architecture
 
 ```
-┌──────────────┐        MCP        ┌──────────────┐
-│  MCP Client  │ ←─────────────────→ │  MCP Server  │
+┌──────────────┐        MCP         ┌──────────────┐
+│  MCP Client  │ ←────────────────→ │  MCP Server  │
 │ (Claude app, │   JSON-RPC over    │  (your app)  │
 │  Cursor,     │   stdio or SSE     │              │
 │  agent)      │                    │              │
@@ -437,7 +437,7 @@ An open protocol from Anthropic that standardizes how AI assistants connect to e
                                     └──────────────┘
 ```
 
-### Core primitives
+#### Core primitives
 
 MCP servers expose three kinds of capabilities:
 
@@ -447,13 +447,13 @@ MCP servers expose three kinds of capabilities:
 | **Resources** | Read-only data the LLM can fetch | `paper://12345` returning paper text |
 | **Prompts** | Reusable prompt templates the user can invoke | `/literature_review {topic}` |
 
-### Transports
+#### Transports
 
 - **stdio** — server runs as a subprocess, communicates over stdin/stdout. Common for local servers (Claude Desktop runs MCP servers this way).
 - **HTTP + SSE (Server-Sent Events)** — server runs as a network service. Common for remote/shared servers.
 - **Streamable HTTP** — newer transport for remote servers, replacing the older SSE-based one.
 
-### Handshake (high level)
+#### Handshake (high level)
 
 1. **Initialize** — client sends `initialize` with its capabilities and protocol version; server responds with its capabilities.
 2. **List capabilities** — client calls `tools/list`, `resources/list`, `prompts/list` to discover what's available.
@@ -474,7 +474,7 @@ Under the hood it's JSON-RPC 2.0, so messages look like:
 }
 ```
 
-### Tool definition (Python SDK example)
+#### Tool definition (Python SDK example)
 
 ```python
 from mcp.server.fastmcp import FastMCP
@@ -499,7 +499,7 @@ if __name__ == "__main__":
 
 The docstring becomes the tool description the LLM sees — **write it well**, because it's what the model uses to decide when to call the tool.
 
-### MCP vs. alternatives
+#### MCP vs. alternatives
 
 | Approach | Pros | Cons |
 |---|---|---|
@@ -508,15 +508,15 @@ The docstring becomes the tool description the LLM sees — **write it well**, b
 | **LangChain tools** | Big library | Heavy abstraction, framework lock-in |
 | **OpenAPI/Swagger + agent** | Reuses existing REST APIs | LLM has to figure out semantics from OpenAPI, less precise |
 
-### Interview talking point
+#### Interview talking point
 
 > "MCP's value is decoupling: the same server can be called from Claude Desktop, Cursor, or any agent that speaks the protocol — without rewriting it for each client. At Darena, we built our server tightly coupled to one chat agent. If I rebuilt it today, MCP would let me expose the same EHR tooling to any LLM-based interface the hospital wanted to use."
 
 ---
 
-## 6. RAG (Retrieval-Augmented Generation)
+### 6. RAG (Retrieval-Augmented Generation)
 
-### The pattern
+#### The pattern
 
 LLMs hallucinate when asked about specifics they don't know. RAG grounds them by retrieving relevant context from your data and stuffing it into the prompt before generation.
 
@@ -537,7 +537,7 @@ User query
 [LLM]  ──> grounded answer with citations
 ```
 
-### Components
+#### Components
 
 **1. Chunking** — split documents into pieces that fit the model's context and produce good embeddings.
 
@@ -557,28 +557,28 @@ Typical chunk size: 200–800 tokens with 10–20% overlap.
 
 **5. Generation** — LLM answers, ideally citing sources.
 
-### Common failure modes
+#### Common failure modes
 
 - **Lost in the middle** — LLMs underweight context in the middle of long prompts. Mitigation: keep context short, put most important sources first.
 - **Hallucinated citations** — model invents source IDs. Mitigation: post-process to verify cited IDs actually exist.
 - **Retrieval miss** — the right document wasn't retrieved. Mitigation: better retriever, more candidates, hybrid search.
 - **Context dilution** — too many retrieved chunks confuse the model. Mitigation: fewer, more relevant chunks.
 
-### Evaluation
+#### Evaluation
 
 - **Retrieval metrics:** precision@K, recall@K, MRR (mean reciprocal rank), nDCG.
 - **Generation metrics:** faithfulness (does the answer match the sources?), answer relevance, citation accuracy.
 - Frameworks: **RAGAS**, **TruLens**, custom eval harnesses.
 
-### Interview talking point
+#### Interview talking point
 
 > "RAG is what makes a tool like Valency Bond actually trustworthy — without retrieval, the LLM is just making things up about research. The hard parts aren't the LLM call, they're upstream: chunking strategy, hybrid retrieval, reranking, and evaluating retrieval quality. I'd want to understand how Valency measures retrieval quality at the scale of tens of millions of papers — that's the part of the problem I'd most want to learn from the team."
 
 ---
 
-## 7. LLM API Patterns
+### 7. LLM API Patterns
 
-### Basic completion (Anthropic example)
+#### Basic completion (Anthropic example)
 
 ```python
 from anthropic import Anthropic
@@ -592,7 +592,7 @@ response = client.messages.create(
 print(response.content[0].text)
 ```
 
-### Streaming
+#### Streaming
 
 Return tokens as they're generated instead of waiting for the full response. Crucial for UX.
 
@@ -608,7 +608,7 @@ with client.messages.stream(
 
 In a web app, you'd typically stream over SSE (Server-Sent Events) or WebSockets to the frontend.
 
-### Structured output
+#### Structured output
 
 Force the model to return JSON matching a schema. Two approaches:
 
@@ -640,7 +640,7 @@ tools = [{
 }]
 ```
 
-### Tool use / function calling
+#### Tool use / function calling
 
 The LLM emits a "I want to call this tool with these args" message. Your code runs the tool, sends the result back, and the LLM continues.
 
@@ -656,24 +656,24 @@ LLM: "There are 47 papers on CT segmentation from 2024. The most cited is..."
 
 This is the foundation of agentic workflows and what MCP standardizes across servers.
 
-### Cost & latency considerations
+#### Cost & latency considerations
 
 - **Tokens are money** — input + output tokens cost. Minimize prompt bloat.
 - **Caching** — Anthropic and OpenAI offer prompt caching: identical prefixes get a discount. Huge for RAG where the system prompt is constant.
 - **Batch APIs** — for non-real-time work, batch processing is ~50% cheaper.
 - **Model tiering** — Haiku for cheap/fast, Sonnet for balanced, Opus for hardest tasks. Route based on complexity.
 
-### Interview talking point
+#### Interview talking point
 
 > "One thing I learned at Darena is that the cheap, fast model is usually right for tool-use steps — the LLM doesn't need to be a genius to decide which tool to call, it just needs to be a competent router. I'd save the bigger model for the final synthesis step where reasoning quality actually matters. That kind of tiering is how you make latency and cost work in production."
 
 ---
 
-## 8. Git & GitHub
+### 8. Git & GitHub
 
 They explicitly said they'll look at your GitHub. Don't show up with messy repos.
 
-### Core commands
+#### Core commands
 
 ```bash
 # Daily workflow
@@ -704,7 +704,7 @@ git reset --hard HEAD~1             # nuke last commit and changes (DANGEROUS)
 git revert <sha>                    # create a new commit that undoes <sha>
 ```
 
-### Commit hygiene
+#### Commit hygiene
 
 **Good commit messages:**
 
@@ -731,7 +731,7 @@ Rules of thumb:
 - Blank line, then optional body explaining *why* (not what — diff shows what)
 - Don't commit broken code to main
 
-### Branching strategies
+#### Branching strategies
 
 - **Trunk-based** (small teams, fast) — short-lived feature branches off `main`, merged frequently
 - **GitFlow** (heavyweight) — `main`, `develop`, `feature/*`, `release/*`, `hotfix/*` branches
@@ -739,7 +739,7 @@ Rules of thumb:
 
 For a small startup like Valency, expect trunk-based or GitHub Flow.
 
-### Pull requests
+#### Pull requests
 
 PR best practices:
 1. **Small PRs** — easier to review, faster to merge. Aim for <400 lines changed.
@@ -748,7 +748,7 @@ PR best practices:
 4. **Address all comments** — either change the code or explain why not.
 5. **Squash on merge** for noisy histories; preserve commits for meaningful ones.
 
-### Things that make recruiters/engineers groan
+#### Things that make recruiters/engineers groan
 
 - Repos called `untitled-1`, `test`, `project2`
 - No README, or "Created with Create React App"
@@ -758,7 +758,7 @@ PR best practices:
 - Main branch with broken builds
 - Massive PRs you can't actually review
 
-### Things that signal quality
+#### Things that signal quality
 
 - Clear README with hook, screenshots/GIF, quickstart
 - Conventional commit messages
@@ -768,17 +768,17 @@ PR best practices:
 - `.gitignore` that's actually correct
 - CI badge that's green
 
-### Interview talking point
+#### Interview talking point
 
 > "I treat my GitHub as a portfolio — even on solo projects, I work in branches and write real commit messages, because the discipline transfers. The repo I'd most want you to look at is [project] — the README walks through the architecture, and the commit history shows how I broke the work into reviewable chunks."
 
 ---
 
-## 9. Coding Patterns for the Screen
+### 9. Coding Patterns for the Screen
 
 These are the patterns that come up in entry-level coding screens. For each, I'll give the pattern, when to use it, a canonical example, and complexity.
 
-### Hash maps (dicts/objects)
+#### Hash maps (dicts/objects)
 
 **Use when:** you need O(1) lookups, counting occurrences, deduping, or remembering what you've seen.
 
@@ -810,7 +810,7 @@ for paper in papers:
 
 **Complexity:** lookups/inserts O(1) average, O(n) worst case (hash collisions).
 
-### Arrays/strings
+#### Arrays/strings
 
 **Common operations to be fluent in:**
 
@@ -837,7 +837,7 @@ def parse_csv_line(line: str) -> list[str]:
 - `s.startswith()`, `s.endswith()`, `s.replace(a, b)`
 - `s.find(sub)` returns -1 if not found; `s.index(sub)` raises
 
-### Recursion
+#### Recursion
 
 **Use when:** the problem has a natural recursive structure (trees, divide-and-conquer, backtracking).
 
@@ -860,7 +860,7 @@ def inorder(node: Node | None) -> list:
 
 **Watch out for:** stack overflow on deep recursion (Python default limit ~1000). For deep trees, iterate instead.
 
-### BFS (Breadth-First Search)
+#### BFS (Breadth-First Search)
 
 **Use when:** shortest path in an unweighted graph, level-order traversal, "fewest steps" problems.
 
@@ -883,7 +883,7 @@ def bfs(graph: dict, start) -> list:
 
 **Key data structure:** queue (FIFO). `deque.popleft()` is O(1); `list.pop(0)` is O(n).
 
-### DFS (Depth-First Search)
+#### DFS (Depth-First Search)
 
 **Use when:** explore all paths, detect cycles, topological sort, connected components.
 
@@ -915,7 +915,7 @@ def dfs_iter(graph, start):
     return order
 ```
 
-### BFS vs. DFS
+#### BFS vs. DFS
 
 | | BFS | DFS |
 |---|---|---|
@@ -924,7 +924,7 @@ def dfs_iter(graph, start):
 | Finds shortest path? | Yes (unweighted) | No |
 | Use for | Shortest path, level order | All paths, cycles, topo sort |
 
-### Two pointers
+#### Two pointers
 
 **Use when:** sorted array, palindromes, removing duplicates, partitioning.
 
@@ -951,7 +951,7 @@ def two_sum_sorted(arr: list[int], target: int) -> list[int]:
     return []
 ```
 
-### Sliding window
+#### Sliding window
 
 **Use when:** find a contiguous subarray/substring matching some condition.
 
@@ -977,7 +977,7 @@ def longest_k_distinct(s: str, k: int) -> int:
 2. While the window violates the constraint, shrink from the left
 3. Track the best window seen
 
-### Simple parsing / data transformation
+#### Simple parsing / data transformation
 
 Real-world version of "easy" coding problems — these come up constantly in startup interviews.
 
@@ -1006,7 +1006,7 @@ def pivot(rows: list[dict]) -> dict:
     return result
 ```
 
-### Complexity cheat sheet
+#### Complexity cheat sheet
 
 | Operation | List | Set/Dict | Deque |
 |---|---|---|---|
@@ -1017,7 +1017,7 @@ def pivot(rows: list[dict]) -> dict:
 | Insert/delete end | O(1) | — | O(1) |
 | Insert/delete front | O(n) | — | O(1) |
 
-### Communication during the screen
+#### Communication during the screen
 
 Equally important as solving the problem:
 
@@ -1031,7 +1031,7 @@ Equally important as solving the problem:
 
 ---
 
-## 10. Behavioral Hooks for Technical Answers
+### 10. Behavioral Hooks for Technical Answers
 
 The best technical interviews aren't pure CS quizzes — they reward candidates who connect technical concepts to real experience. For each topic above, have a short "I've actually done this" hook ready:
 
@@ -1049,7 +1049,7 @@ The best technical interviews aren't pure CS quizzes — they reward candidates 
 
 ---
 
-## Final prep checklist
+### Final prep checklist
 
 **Two days before:**
 - Re-read this cheat sheet end-to-end

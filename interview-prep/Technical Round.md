@@ -263,7 +263,7 @@ By keyword
 def get_papers(title: str = "", limit: int = 10):
 	filtered []
 	for paper in papers:
-		if title and title.lower() not in paper["title"]:
+		if title and title.lower() not in paper["title"].lower():
 			continue
 		filtered.append(paper)
 	return filtered[:limit]

@@ -562,10 +562,10 @@ even with a 0 ms delay, the timeout must wait for the **synchronous** script to 
 - if fxn takes **200ms** to run and delay is **500ms**, then the next fxn execution happens at the end of that delay (**500ms** from start)
 - executions can stack without break
 
-recursive `setTimout` *excludes* execution time
+recursive `setTimeout` *excludes* execution time
 - if fxn takes **700ms** to run and delay is **500ms**, then the next fxn execution happens at **1200ms** from start
 - guaranteed fixed gap between execution end and next execution start
-- safer for heavy 
+- safer for heavy  loads
 
 ### Race Conditions
 Use `useRef` and `AbortController` for handling multiple requests in a short time span

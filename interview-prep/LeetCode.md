@@ -12,6 +12,24 @@ Don't over-prepare hard dynamic programming; focus on cleanly solving easy/mediu
 ### Arrays
 Array (and string) slices are *inclusive* at the start and *non-inclusive* at the end
 
+**Indexing**
+```python
+items = ['a', 'b', 'c']
+idx = items.index('b')
+print(idx)  # 1
+```
+
+**Unicode**
+```python
+>> ord('a')  # 97
+>> ord('b')  # 98
+
+>> chr(97)  # a
+>> chr(98)  # b
+
+>> "123".isdigit()  # True
+```
+
 ### Linked Lists
 **Scenario**: Create a linked list and add a sequence to it
 ```ad-example
@@ -42,4 +60,13 @@ char_deque.appendleft('c')
 
 reversed_str = "".join(char_deque)
 print(reverser_str)  # cba
+```
+
+### Regex
+```python
+import re
+
+pat = r"[0-9]"
+match = re.search(pat, "a-s24b")
+print(match)  # [2, 4]
 ```

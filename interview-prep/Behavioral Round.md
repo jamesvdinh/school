@@ -71,3 +71,37 @@ title: Ending questions
 	- *Resolution*: I reshaped the argument of the proof while the other person worked out the actual derivation
 - Where do you see yourself in 2-3 years?
 - What questions do you have for us?
+
+
+## InstaLILY
+### Prompt Opinion/DH
+
+> **Tell us a project you're proud of**
+> Topic: Building MCP server at Prompt Opinion
+
+**Situation**: build MCP server for production for an AI health copilot.
+- goal was to let LLM be actually useful for the health care provider
+- allow it to call external APIs, retrieve patient resources from the PostgreSQL database, and return structured results that an agent could rely on
+
+**Task**: The main challenge was reliability -- one of the main concerns of implementing an AI copilot in internal operations is if it will actually make things easier.
+- tool calls can fail
+- LLMs can hallucinate or run off the guardrails
+- the whole chain has to be predictable to prevent inconsistencies
+
+**Action**: Focused on designing tool architecture
+- structuring tool definitions to specify the intended usage cases, any edge cases, params
+- validating inputs/outputs
+- handling multi-step retrieval in order to retain context
+
+**Result**: Enjoyed working on a production feature for real clients
+- was able to push an MVP and run test prompts on the copilot
+- gathered feedback from real physicians who beta tested the product
+- learned crucial steps in the production software lifecycle
+- made me want to pursue production AI and ensure safety and reliability
+
+> **Why InstaLILY?**
+
+You build real AI features on production systems for real people, and that part genuinely excites me. I've been getting used to experimenting with solo AI features that work on a small scale, but what about a big scale running reliably across a large network of people?
+- **Company Mission**: when I read about InstaWorkers that bundled CRM and enterprise workflows together with the specialized language models InstaLILY is developing, I instantly became drawn to it
+- **Relevance**: At Prompt Opinion while building MCP servers for a small-scale beta test, I've always been reaching for an opportunity to apply that same architecture to a large scale.
+- **Startup appeal**: Also, founding team setup with real end-to-end ownership is something I'm attracted to.

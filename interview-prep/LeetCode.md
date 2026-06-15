@@ -12,11 +12,17 @@ Don't over-prepare hard dynamic programming; focus on cleanly solving easy/mediu
 ### Arrays
 Array (and string) slices are *inclusive* at the start and *non-inclusive* at the end
 
-**Indexing**
+**Methods**
 ```python
+# Indexing, O(n)
 items = ['a', 'b', 'c']
 idx = items.index('b')
 print(idx)  # 1
+
+# Find Counts, O(n)
+nums = [1, 2, 2, 3]
+count = nums.count(2)
+print(count)  # 2
 ```
 
 **Unicode**
@@ -47,6 +53,15 @@ def create_new_list() -> ListNode:
 ~~~
 ```
 
+Pointers to a ListNode `head` is a *shallow copy*
+- can access elements in `head`
+- does not directly modify `head`
+
+```python
+def reverseList(head: ListNode) -> ListNode:
+	tail = head
+	while 
+```
 ### Queue
 **Deque**: double-ended queue
 ```python
@@ -70,3 +85,13 @@ pat = r"[0-9]"
 match = re.search(pat, "a-s24b")
 print(match)  # [2, 4]
 ```
+
+## Patterns & Algorithms
+### Two Pointers
+**Floyd's Tortoise and Hare Algorithm**
+hitches on the linked list strategy of mapping indices to values
+
+**Problem**: finding duplicate in unsorted array
+*Phase 1*: use slow, fast pointers to find a meeting point; slow by 1, fast by 2
+*Phase 2*: run cycle again, but only iterate each by 1
+![[Screenshot 2026-06-15 at 11.59.03 AM.png]]

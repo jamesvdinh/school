@@ -100,3 +100,11 @@ hitches on the linked list strategy of mapping indices to values
 **for loops**:
 - each iter looks at next item and assigns i to it, so incrementing i to *skip* an iteration does not work
 
+**checking Null**:
+```python
+if not num -> True
+# num can be 0, [], "", None
+
+if num is None -> True
+# num can only be None
+```

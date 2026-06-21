@@ -96,6 +96,7 @@ hitches on the linked list strategy of mapping indices to values
 *Phase 2*: run cycle again, but only iterate each by 1
 ![[Screenshot 2026-06-15 at 11.59.03 AM.png]]
 
+**Window size**: `r - l + 1`
 ## Tips
 **for loops**:
 - each iter looks at next item and assigns i to it, so incrementing i to *skip* an iteration does not work

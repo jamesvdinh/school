@@ -37,7 +37,7 @@ So, in this scenario with a large codebase and limited time (45 mins), *I would 
 ```ad-check
 title: AI prompt: Understanding the codebase
 
-**Prompt**: "Let's try to understand the FinancialReportGeneratorSurvice fully"
+**Prompt**: Let's try to understand the FinancialReportGeneratorSurvice fully
 - don't ask to make any changes or fixes
 - *explain* that you're using this service to understand all the steps in the service
 ```
@@ -53,5 +53,51 @@ For the sake of the interview, there is a hard-coded timeout set in place to sim
 **Reorient**: how can we *prevent the timeout* from happening while *still getting the job done*?
 ```
 5. *ASK & Identify*: either AI or interviewer -> "Is the process **sync or async**?"
-	- it is sync: I would move to async process
+	- it is sync -> *SOLVE*: I would move to async process
 		- we wouldn't get stuck and we would allow job to be created
+
+```ad-hint
+title: Interviewer question
+
+So yes, the main scenario here is that we can defer this process *in the background* and keep the main thread clear. What are some *challenges* to shifting this to an async process?
+
+A: **(1)** even if we go async, if there are flaws that occur *AFTER* the report generation, we still have to wait until the process is finished
+**(2)** we need to consider if we even want to support multiple threads calling the report asynchrounously
+```
+6. *START* prompting Claude to make code changes, but document changes along the way
+
+```ad-check
+title: AI prompt: Refactoring a process from sync to async
+
+**Prompt**: Now we want to convert this sync process of generating report into async. Before implementing the code, let's understand the structure we will go through.
+
+Clarify:
+- I'm asking the AI to explain the design choices if creates to add that HIL input
+- allows me to generate code that I can understand fundamentally
+```
+
+```ad-hint
+title: Interviewer question
+
+**Question**: What layer should we implement the async layer in?
+
+**A**: so it depends on us whether we want an entirely new service layer to handle this process and call on multiple threads. Or, with keeping the current structure, we can *change the code within the try* of the service layer, then refactor code in the report generation to handle async.
+
+**Q**: How about we do it at the top layer?
+```
+
+```ad-check
+title: AI prompt: Convert code to async
+
+**Prompt**: Let's convert report generation from sync to asnyc. Convert the ReportGenerator into an sync call.
+```
+
+**Key takeaways**:
+- using AI to *understand* the code first rather than jumping straight into making changes
+- instructing the AI to *target a specific process* instead of just 'make this process async' -> the whole code is a process, but which one
+
+Interviewer grading **gates**:
+1. know that the solution is asynchronous
+2. where to put async call
+	- we want users to receive a "in progress" response while report process is running
+3. multiple jobs happening simultaneously -> use multithreading

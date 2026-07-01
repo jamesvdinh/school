@@ -1,3 +1,5 @@
+## Resources
+- [CAP Theorem for AI Agents](https://tianpan.co/blog/2026-04-14-cap-theorem-for-ai-agents)
 ## CAP Theorem
 The CAP theorem states that you can have at most 2 of 3 properties:
 1. **consistency** -- refusing to serve data until partition heals

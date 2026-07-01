@@ -36,3 +36,4 @@
 	- can't rely on thumbs up/down feedback from users
 	- have to design golden examples, permission boundary checks, and adversarial prompts
 	- differentiate between *retrieval* vs *generation* quality
+

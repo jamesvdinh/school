@@ -61,7 +61,7 @@ Default: **ReAct-style loop**
 	- what quality checks to make
 	- how to scale to prod
 
-### Loom walthrough
+### Loom walkthrough
 > Max 5 mins
 > Decision-focused, NOT a code read through
 

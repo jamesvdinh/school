@@ -46,3 +46,32 @@ On failure, the framework has 3 options (in order of priority): retry, error, or
 3. **Tertiary**: *rule-based logic* for common, well-understood scenarios
 	- Ex. password resets do not need an LLM
 4. **Quaternary**: *deferred processing* with user acknowledgement. Queue the request, tell user it will be answered later, and process it when tool recovers
+
+## LangChain
+A single tightened interface to handle testing multiple LLM APIs in your code
+- uses "chaining" to query responses from the LLM API
+
+## Prompt Engineering
+**Zero-shot Prompting**: asking AI to perform a task *without* providing any examples or a template
+- Ex. "Write a policy"
+- Ex. "Write a data privacy policy for these customers"
+- **pros**: quick
+
+**One-shot Prompting**: provide *one* example for the LLM to base its output on
+- Ex. "Here's how we format out policy document .... Now write data privacy policy following this structure"
+- best for simple tasks and where one example is available
+- *use case*: generating a structured recipe
+- **pros**: enforces formatting
+
+**Few-shot Prompting**: providing *multiple* (2-5) examples to the LLM side where it's able to fulfill requests from pattern recognition
+- better for complex tasks and for generalizability
+- *use case*: emphatic customer support responses
+- **pros**: enforces tone and consistency
+
+**Chain-of-thought Prompting**: a *set of steps* to instruct how the LLM reasons through a prompt
+- Ex. "Here's how to write a data policy... Review current GDPR req... Then, analyze existing policy... Then research... Finally..."
+- **pros**: detailed reasoning
+
+## Vector Databases
+Where classic SQL databases require you to search by *value*, vector DBs allow you to search by semantic *meaning*
+

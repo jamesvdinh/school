@@ -1,6 +1,6 @@
 ## Basics
 **MCP**: Model Context Protocol
-**FastAPI**: Anthropic's official SDK for building MCP servers
+**FastMCP**: Anthropic's official SDK for building MCP servers
 
 ### Primitives
 

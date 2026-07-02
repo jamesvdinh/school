@@ -23,6 +23,7 @@ Tool call appears to succeed but returns *stale* data, cached response from a di
 - agent proceeds confidently with corrupted input
 - no error message, no flag
 - failure only surfaces downstream
+- Ex. if semantic search returns the wrong result (but the correct result still exists in the vector DB)
 
 ```ad-info
 The root cause for these is **tool call architecture**
@@ -50,6 +51,35 @@ On failure, the framework has 3 options (in order of priority): retry, error, or
 ## LangChain
 A single tightened interface to handle testing multiple LLM APIs in your code
 - uses "chaining" to query responses from the LLM API
+
+### LangGraph
+Builds off of **LangChain** for more complex *multi-step workflows* and *better orchestration*
+- multi-step workflows
+- conditional branching
+- iterative processes
+
+Goes beyond simple question/answer interactions by structuring an agent workflow as a graph of nodes
+- each *node* is an individual unit of computation (like a function you can call)
+- use *edges* to connect nodes to define *execution flow*
+
+**Shared state**: uses a state graph that stores information throughout the entire workflow
+
+Allow for *powerful* capabilities:
+- *loops* for iterative analysis
+- *conditional branching* on intermediate results
+- *persistent state* that maintains context across the entire workflow
+```ad-example
+**Prompt**: "I need to understand our data privacy policy for EU customers"
+
+**LangGraph** defines a graph where each *node* handles a specific responsibility
+- Node 1: Search & gather privacy policy documents
+	- edge routes to node 2
+- Node 2: Extract & clean node document content
+- Node 3: Evaluate GDPR compliance using LLM analysis
+	- conditional edge either routes to node 4 or node 5
+- Node 4: Cross-reference EU regulations
+- Node 5: Report generation
+```
 
 ## Prompt Engineering
 **Zero-shot Prompting**: asking AI to perform a task *without* providing any examples or a template
@@ -87,7 +117,7 @@ Where classic SQL databases require you to search by *value*, vector DBs allow y
 Production-ready database that can handle millions of embeddings, perform similarity search quickly, and support metadata filtering.
 
 ## RAG (Retrieval Augmented Generation)
-Answers the question: is it possible to search through 500GBs of an entire company's documents? -- Yes, AI assistants can fit them in their context window and generate output
+**Answers the question**: is it possible to search through 500GBs of an entire company's documents? -- *Yes*, AI assistants can fit them in their *context window* and generate output using **RAG**
 
 Question: "What's our remote work policy for international employees?"
 **Retrieval**: create *word embedding* for question
@@ -97,4 +127,53 @@ Question: "What's our remote work policy for international employees?"
 - semantic search result provides augmented knowledge for the AI to use
 **Generation**: AI generates the response given the semantic relevant data retrieved from the vector DB
 - AI retrieves data relevant to *remote work* and *policy*
-- Then, structures response based on initial criteria of *international employees*
+- Then, uses own reasoning to generate a reasonable output based on initial criteria of *international employees*
+
+**RAG** vs **Long Context**
+- **Long Context** -> if your problem involves a bounded dataset and requires complex global reasoning such as summarizing a book
+- **RAG** -> for enterprise "infinite data"
+
+![[Screenshot 2026-07-02 at 12.16.17 AM.png]]
+## MCP (Model Context Protocol)
+Used to access *3rd party external systems* such as inventory management, customer DB, and external APIs.
+
+**Traditional APIs** expose endpoints that require *rigid integrations* tied to specific systems. **MCP** doesn't just expose tools -- it provides *self-describing interfaces* that AI agents can understand and use.
+
+```ad-important
+Unlike traditional APIs, **MCP** puts the burden on the *AI agent* rather than the developer
+```
+
+MCP's real value comes in the form of a *plug-and-play* design. MCP developers build MCPs that you can simply use directly in your **AI agents**.
+
+Multiple MCP servers can be *unified* under one **AI agent**. The main function is intelligent tool selection
+
+## Skills
+Provides *procedural knowledge* for an **AI Agent**. Allows orchestration for when and how to do a task.
+
+Structure:
+```md
+my-skill/
+├── SKILL.md      # Required: metadata + instructions
+├── scripts/      # Optional: executable code
+├── references/   # Optional: documentation
+├── assets/       # Optional: templates, resources
+└── ...           # Any additional files or dirs
+```
+
+**`SKILL.md`**
+- Frontmatter
+	- name: PDF Builder
+	- description: use when the user asks to extract a PDF
+- Body
+	- step-by-step instructions
+	- rules & examples of input and output
+
+**Progressive Disclosure**: only reads skill "tiers" if it is tasked by the LLM; helps LLM *index* skills and *frees up space* in context window
+- **first tier**: Frontmatter (metadata) -> LLM reads this first to decide whether to use the skill
+- **second tier**: body + instructions -> once LLM decides it needs the skill, reads the body
+- **third tier**: everything else -> LLM only grabs these at the point of need
+
+**Safety Compliance**
+- prompt injection
+- tool poisoning
+- malware

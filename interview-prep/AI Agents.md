@@ -73,5 +73,28 @@ A single tightened interface to handle testing multiple LLM APIs in your code
 - **pros**: detailed reasoning
 
 ## Vector Databases
-Where classic SQL databases require you to search by *value*, vector DBs allow you to search by semantic *meaning*
+Where classic SQL databases require you to search by *value*, vector DBs allow you to search by semantic *meaning*. Easier on the client, yet introduces complexity upfront.
 
+**Embeddings**: convert the data into vectors to store in the DB
+**Dimensionality**: words don't have just one meaning -- it depends on context (tone, formality, etc.)
+- use *1,536* dimensions to capture most richness (not too large, but gives enough context to allow for search depth)
+**Retrieval**: decides on how to return queries
+- **scoring**: a *threshold* set to define how similar the results need to be considered a proper match
+- **chunk overlap**: leaves overlap between "chunks" of data to allow context to spill over and the search to work properly
+	- usually, you'd store input data as "chunks" to allow embeddings to have context
+
+### ChromaDB
+Production-ready database that can handle millions of embeddings, perform similarity search quickly, and support metadata filtering.
+
+## RAG (Retrieval Augmented Generation)
+Answers the question: is it possible to search through 500GBs of an entire company's documents? -- Yes, AI assistants can fit them in their context window and generate output
+
+Question: "What's our remote work policy for international employees?"
+**Retrieval**: create *word embedding* for question
+- run **semantic search**: compare word embedding against embeddings of other documents in vector DB
+**Augmentation**: process where retrieved data is *injected* into the prompt at runtime
+- allows AI rely on up-to-date info in the database
+- semantic search result provides augmented knowledge for the AI to use
+**Generation**: AI generates the response given the semantic relevant data retrieved from the vector DB
+- AI retrieves data relevant to *remote work* and *policy*
+- Then, structures response based on initial criteria of *international employees*

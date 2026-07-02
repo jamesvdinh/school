@@ -177,3 +177,21 @@ my-skill/
 - prompt injection
 - tool poisoning
 - malware
+
+## Reliability
+When APIs fail, need a way to fallback
+- retry logic
+- timeouts -- so that agent doesn't hang indefinitely
+- fallback paths -- choose plan B when plan A doesn't work
+
+## Security
+**Prompt Injection**: malicious instructions that override system prompts
+- use **input validation** to catch malformed requests
+- **output filters** to block responses that violate policy
+- **permission boundaries** that limit agent capabilities
+
+## Observability
+*Trace* the agent's decisions, tool calls w/ parameters, token metrics, retrieval system return
+- test cases with known good answers
+- success rate, latency, cost per task
+- automated test that catch discrepancies

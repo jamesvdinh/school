@@ -316,3 +316,5 @@ return "Stopped: hit the iteration cap without a final answer"
 - trust the model's routing, verify and contain everything downstream of it
 - *key design property*: failure never propagates as an exception that kills the run; it comes back as data and appended to  tool_results
 	- this allows the LLM to recover in natural language
+- guardrails (output)
+	- best guard is partly upstream: big 3 LLM APIs have a strict/structured-output mode that constrains decoding so malformed args are less likely at the source

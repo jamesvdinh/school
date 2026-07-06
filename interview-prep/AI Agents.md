@@ -184,6 +184,12 @@ When APIs fail, need a way to fallback
 - timeouts -- so that agent doesn't hang indefinitely
 - fallback paths -- choose plan B when plan A doesn't work
 
+**Handling the consequences of model routing**
+- *schema* bounds the argument shape
+- *existence check* bounds bad tool names
+- *try/except* bounds execution failures
+- *iteration cap* bounds runaway loops
+
 ## Security
 **Prompt Injection**: malicious instructions that override system prompts
 - use **input validation** to catch malformed requests
@@ -192,6 +198,96 @@ When APIs fail, need a way to fallback
 
 ## Observability
 *Trace* the agent's decisions, tool calls w/ parameters, token metrics, retrieval system return
-- test cases with known good answers
+- test cases with *known good answers*
 - success rate, latency, cost per task
 - automated test that catch discrepancies
+
+## Agentic Tool Orchestrator Flow
+**Givens + Tools**
+- MCP tools
+- native LLM tool-calling API
+- schema validator (Pydantic/Zod)
+- plain structured logging
+
+Key points
+- tool description quality *is* the routing logic
+
+**Orchestrator Flow**
+1. *Ingest* the query and tool schemas
+	- occurs during API call
+	- schemas are passed on *every* iteration -
+```python
+def run_agent(query: str) -> str:
+	messages = [{
+		"role": "user",
+		"content": query,
+	}]
+	
+	for step in range(1, MAX_ITERS + 1):
+		response = client.messages.create(
+			model=MODEL,
+			max_tokens=1024,
+			tools=TOOL_SCHEMAS, # ingest tool schemas
+			messages=messages, # ingest query
+		)
+```
+
+2. LLM *decides* to propose a tool call (with typed args) or emits a final answer
+	- use provider's native function-calling
+```python
+if response.stop_reason != "tool_use": # check if final answer
+	final = "".join(b.text for b in response.content if b.type == "text") # use generator for memory efficiency
+	print(f"[step {step}] FINAL ANSWER")
+	return final.strip()
+```
+
+3. *Validate* the proposed call against the tool's schema
+	- Pydantic in Python / Zod in TS
+	- catches malformed model output
+```python
+"""Implicit in reference orchestrator
+1) Anthropic API contrains and validates the model's input against each tool's input schema
+2) TOOL_FUNCTIONS[name](**args) will raise a TypeError at call time if the args don't match the func signature
+"""
+```
+
+4. *Execute* tool call and capture result or output a **clean error**
+	- `json.dumps()`: converts a Python data type into JSON-formatted string
+```python
+def _execute_tool(name: str, args: dict) -> str:
+	if name not in TOOL_FUNCTIONS:
+		return f"Error: no tool named '{name}' exists."
+	try:
+		result = TOOL_FUNCTIONS[name](**args)
+		return result if isinstance(result, str) else json.dumps(result) # crucial to return a string
+	except Exception as e:
+		return f"Error running {name}: {e}"
+```
+
+5. *Feed back* the result into context
+	- crucial for multi-tool calls of the same query
+```python
+messages.append({
+	"role": "assistant",
+	"content": response.content # feed back the content from the LLM
+})
+```
+
+6. *Loop* back to step 2
+	- implement a hard iteration cap (5 max) and clear termination condition
+7. *Return* the final answer plus a trace of what happened
+
+**Optimizations**: these are wrapped around the orchestrator loop
+- **Reliability**
+	- validate inputs/outputs
+	- retry or gracefully degrade on tool failure
+	- guard against malformed output -- key Prompt Opinion focus
+- **Observability**
+	- log every decision and tool call as structured output
+	- be able to trace calls in Loom:
+	> "Here the agent picks tool X, gets Y, then decides Z"
+- **Tool description tuning**
+	- description quality ensures routing accuracy
+
+**Loom**
+- trust the model's routing, verify and contain everything downstream of it

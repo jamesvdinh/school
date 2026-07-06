@@ -234,6 +234,9 @@ def run_agent(query: str) -> str:
 
 2. LLM *decides* to propose a tool call (with typed args) or emits a final answer
 	- use provider's native function-calling
+	- don't second-guess the routing
+	- important thing is we trust the decision, but handle the consequences
+		- the area to improve routing quality is the description tuning, not code
 ```python
 if response.stop_reason != "tool_use": # check if final answer
 	final = "".join(b.text for b in response.content if b.type == "text") # use generator for memory efficiency
@@ -271,10 +274,25 @@ messages.append({
 	"role": "assistant",
 	"content": response.content # feed back the content from the LLM
 })
+	
+messages.append({
+	"role": "user",
+	"content": tool_results # appends the tool_results for the next iteration, carries the tool_use_id that ties it to its request
+})
 ```
 
 6. *Loop* back to step 2
 	- implement a hard iteration cap (5 max) and clear termination condition
+```python
+for step in range(1, MAX_ITERATIONS + 1):
+	...
+	if response.stop_reason != "tool_use":
+		...
+		return final answer
+		
+return "Stopped: hit the iteration cap without a final answer"
+```
+
 7. *Return* the final answer plus a trace of what happened
 
 **Optimizations**: these are wrapped around the orchestrator loop
@@ -284,6 +302,11 @@ messages.append({
 	- guard against malformed output -- key Prompt Opinion focus
 - **Observability**
 	- log every decision and tool call as structured output
+	- trace structure (returns alongside answer):
+		- tool
+		- args
+		- result
+		- optional: latency/token counts
 	- be able to trace calls in Loom:
 	> "Here the agent picks tool X, gets Y, then decides Z"
 - **Tool description tuning**
@@ -291,3 +314,5 @@ messages.append({
 
 **Loom**
 - trust the model's routing, verify and contain everything downstream of it
+- *key design property*: failure never propagates as an exception that kills the run; it comes back as data and appended to  tool_results
+	- this allows the LLM to recover in natural language

@@ -257,7 +257,7 @@ if response.stop_reason != "tool_use": # check if final answer
 4. *Execute* tool call and capture result or output a **clean error**
 	- `json.dumps()`: converts a Python data type into JSON-formatted string
 ```python
-def _execute_tool(name: str, args: dict) -> str:
+def execute_tool(name: str, args: dict) -> str:
 	if name not in TOOL_FUNCTIONS:
 		return f"Error: no tool named '{name}' exists."
 	try:
@@ -300,6 +300,19 @@ return "Stopped: hit the iteration cap without a final answer"
 	- validate inputs/outputs
 	- retry or gracefully degrade on tool failure
 	- guard against malformed output -- key Prompt Opinion focus
+```python
+SCHEMA_BY_NAME = {t["name"]: t["input_schema"] for t in TOOL_SCHEMAS}
+try:
+	jsonschema.validate(intance=args, schema=SCHEMA_BY_NAME[name])
+	return None
+except jsonschema.ValidationError as e:
+	return f"Invalid arguments for {name}: {e.message}"
+```
+
+```python
+if not isinstance(args, dict):
+	return (f"Tool args must be an object, got ...", False)
+```
 - **Observability**
 	- log every decision and tool call as structured output
 	- trace structure (returns alongside answer):

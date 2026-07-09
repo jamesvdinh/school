@@ -36,6 +36,17 @@ print(count)  # 2
 >> "123".isdigit()  # True
 ```
 
+## Hash Maps
+**Counter**
+```python
+from collections import Counter
+
+text = "mommy"
+counts = Counter(text)
+# {'m': 3, 'o': 1, 'y': 1}
+```
+- doesn't throw a `KeyError` when you index a nonexistent key, returns 0 instead
+
 ### Linked Lists
 **Scenario**: Create a linked list and add a sequence to it
 ```ad-example

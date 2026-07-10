@@ -9,6 +9,15 @@ Most likely topics for Valency (Claude):
 Don't over-prepare hard dynamic programming; focus on cleanly solving easy/medium problems with **good** communication
 ```
 
+## Asymptotics
+
+| Operation                    | Time       | Space             |
+| ---------------------------- | ---------- | ----------------- |
+| sorted() & .sort()           | O(N log N) | O(N) for sorted() |
+| [list_a] + [list_b]          | O(N + M)   | O(N + M)          |
+| list()                       | O(N)       | O(N)              |
+| .values(), .keys(), .items() | O(1)       | O(1)              |
+
 ### Arrays
 Array (and string) slices are *inclusive* at the start and *non-inclusive* at the end
 
@@ -35,7 +44,7 @@ print(count)  # 2
 
 >> "123".isdigit()  # True
 ```
-
+common practice to subtract unicode value by `ord('a')` to get index value of letter
 ## Hash Maps
 **Counter**
 ```python

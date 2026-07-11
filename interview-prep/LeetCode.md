@@ -17,6 +17,7 @@ Don't over-prepare hard dynamic programming; focus on cleanly solving easy/mediu
 | [list_a] + [list_b]          | O(N + M)   | O(N + M)          |
 | list()                       | O(N)       | O(N)              |
 | .values(), .keys(), .items() | O(1)       | O(1)              |
+|                              |            |                   |
 
 ### Arrays
 Array (and string) slices are *inclusive* at the start and *non-inclusive* at the end
@@ -129,3 +130,15 @@ if not num -> True
 if num is None -> True
 # num can only be None
 ```
+
+### Complexity sheet
+
+| **Pattern**           | **Time** | **Space**    |
+| --------------------- | -------- | ------------ |
+| HashMap lookup/insert | O(1) avg | O(n)         |
+| Sliding window        | O(n)     | O(1) or O(k) |
+| Prefix sum (build)    | O(n)     | O(n)         |
+| Prefix sum (query)    | O(1)     | --           |
+| Two pointers          | O(n)     | O(1)         |
+| Binary search         | O(log n) | O(1)         |
+| Stack push/pop        | O(1)     | O(n)         |

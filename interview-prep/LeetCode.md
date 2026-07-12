@@ -118,6 +118,13 @@ hitches on the linked list strategy of mapping indices to values
 **Window size**: `r - l + 1`
 
 ### Hash tables
+**Deleting**
+```python
+d = {"apple": 1, "banana": 2}
+del d["apple"]
+val = d.pop("blueberry", 0) # safe fallback
+```
+
 **defaultdict**: best for initializing values without setting them first
 ```python
 from collections import defaultdict
@@ -125,6 +132,11 @@ from collections import defaultdict
 lookup = defaultdict(list)
 lookup["words"].append("apple")
 # no if statement needed, creates list instantly
+
+del lookup["words"]
+print("words" in lookup) # False
+
+print(d["words"]) # True, since we reinitialized it
 ```
 
 
@@ -161,3 +173,5 @@ if not num -> True
 if num is None -> True
 # num can only be None
 ```
+
+- **for loops** are *faster* than **while** loops (in Python)

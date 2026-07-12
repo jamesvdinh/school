@@ -46,17 +46,6 @@ print(count)  # 2
 >> "123".isdigit()  # True
 ```
 common practice to subtract unicode value by `ord('a')` to get index value of letter
-## Hash Maps
-**Counter**
-```python
-from collections import Counter
-
-text = "mommy"
-counts = Counter(text)
-# {'m': 3, 'o': 1, 'y': 1}
-```
-- doesn't throw a `KeyError` when you index a nonexistent key, returns 0 instead
-
 ### Linked Lists
 **Scenario**: Create a linked list and add a sequence to it
 ```ad-example
@@ -108,6 +97,15 @@ print(match)  # [2, 4]
 ```
 
 ## Patterns & Algorithms
+| **Pattern**           | **Time** | **Space**    |
+| --------------------- | -------- | ------------ |
+| HashMap lookup/insert | O(1) avg | O(n)         |
+| Sliding window        | O(n)     | O(1) or O(k) |
+| Prefix sum (build)    | O(n)     | O(n)         |
+| Prefix sum (query)    | O(1)     | --           |
+| Two pointers          | O(n)     | O(1)         |
+| Binary search         | O(log n) | O(1)         |
+| Stack push/pop        | O(1)     | O(n)         |
 ### Two Pointers
 **Floyd's Tortoise and Hare Algorithm**
 hitches on the linked list strategy of mapping indices to values
@@ -115,9 +113,42 @@ hitches on the linked list strategy of mapping indices to values
 **Problem**: finding duplicate in unsorted array
 *Phase 1*: use slow, fast pointers to find a meeting point; slow by 1, fast by 2
 *Phase 2*: run cycle again, but only iterate each by 1
-![[Screenshot 2026-06-15 at 11.59.03 AM.png]]
+![[Screenshot 2026-06-15 at 11.59.03 AM.png|475]]
 
 **Window size**: `r - l + 1`
+
+### Hash tables
+**defaultdict**: best for initializing values without setting them first
+```python
+from collections import defaultdict
+
+lookup = defaultdict(list)
+lookup["words"].append("apple")
+# no if statement needed, creates list instantly
+```
+
+
+**Counter**: best used for counting frequencies of items, accepts iterable arg
+```python
+from collections import Counter
+
+text = "mommy"
+counts = Counter(text)
+# {'m': 3, 'o': 1, 'y': 1}
+```
+- doesn't throw a `KeyError` when you index a nonexistent key, returns 0 instead
+
+- Average O(1) lookup/insert, O(n) space
+- Worst case O(n) time due to collisions (rarely matters in interviews but good to mention)
+- When asked for tradeoffs: "I'm trading space for time here — the hashmap gives me O(1) lookups at the cost of O(n) extra memory"
+
+#### Hash sets
+**Remove Items**
+`set.remove(x)`: removes a specific item
+- raises error if missing
+`set.discard(x)`: removes a specific item
+- safe/no errors
+
 ## Tips
 **for loops**:
 - each iter looks at next item and assigns i to it, so incrementing i to *skip* an iteration does not work
@@ -130,15 +161,3 @@ if not num -> True
 if num is None -> True
 # num can only be None
 ```
-
-### Complexity sheet
-
-| **Pattern**           | **Time** | **Space**    |
-| --------------------- | -------- | ------------ |
-| HashMap lookup/insert | O(1) avg | O(n)         |
-| Sliding window        | O(n)     | O(1) or O(k) |
-| Prefix sum (build)    | O(n)     | O(n)         |
-| Prefix sum (query)    | O(1)     | --           |
-| Two pointers          | O(n)     | O(1)         |
-| Binary search         | O(log n) | O(1)         |
-| Stack push/pop        | O(1)     | O(n)         |

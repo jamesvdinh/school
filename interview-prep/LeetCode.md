@@ -115,9 +115,40 @@ hitches on the linked list strategy of mapping indices to values
 *Phase 2*: run cycle again, but only iterate each by 1
 ![[Screenshot 2026-06-15 at 11.59.03 AM.png|475]]
 
+### Sliding Window
 **Window size**: `r - l + 1`
+```python
+"""
+A generic template for dynamic sliding window finding max window length
+"""
+def longest_window(nums, condition):
+    i = 0
+    max_length = 0
+    result = None
 
+    for j in range(len(nums)):
+        # Expand the window
+        # Add nums[j] to the current window logic
+
+        # Shrink the window if the condition is violated
+        while not condition():  
+            # Shrink the window from the left
+            # Remove nums[i] from the current window logic
+            i += 1
+
+        # Update the result if the current window is larger
+		max_length = max(max_length, j - i + 1)
+		# Add business logic to update result
+
+    return result
+```
+- note: some problems allow you to use a simple if statement in place of the while loop
+
+A trick for the window and *max length* problems is that we can use the problem parameters to our advantage. Since we only care about finding the *max* length of a subarray, we sometimes don't need to downsize the window using the **while** loop and instead just replace it with a simple **if** statement. This way, the next iteration just *shifts* the window by 1 to the right. Also, any tracker variable that tracks the maximum frequency of an item never needs to decrement unless there's a higher value.
 ### Hash tables
+- Average O(1) lookup/insert, O(n) space
+- Worst case O(n) time due to collisions (rarely matters in interviews but good to mention)
+- When asked for tradeoffs: "I'm trading space for time here — the hashmap gives me O(1) lookups at the cost of O(n) extra memory"
 **Deleting**
 ```python
 d = {"apple": 1, "banana": 2}
@@ -147,12 +178,15 @@ from collections import Counter
 text = "mommy"
 counts = Counter(text)
 # {'m': 3, 'o': 1, 'y': 1}
+
+counter1 = Counter(a=2, b=3)
+counter2 = Counter(a=2, b=3)
+counter2 = Counter(a=2, b=3, c = 0)
+print(counter1 == counter2) # Returns True
+print(counter1 == counter3) # Returns False
+print(+c1 == +c3) # Returns True (strips out the zero count before comparing)
 ```
 - doesn't throw a `KeyError` when you index a nonexistent key, returns 0 instead
-
-- Average O(1) lookup/insert, O(n) space
-- Worst case O(n) time due to collisions (rarely matters in interviews but good to mention)
-- When asked for tradeoffs: "I'm trading space for time here — the hashmap gives me O(1) lookups at the cost of O(n) extra memory"
 
 #### Hash sets
 **Remove Items**

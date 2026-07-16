@@ -46,6 +46,35 @@ print(count)  # 2
 >> "123".isdigit()  # True
 ```
 common practice to subtract unicode value by `ord('a')` to get index value of letter
+
+**Alphanumeric**
+```python
+s = "Hi, World!"
+alpha_s = ""
+for ch in s:
+	if ch.isalnum():
+		alpha_s += ch
+print(alpha_s)
+# "HiWorld"
+
+import re
+reg_s = re.sub(r'[^a-zA-Z0-9]', s)
+print(alpha_s)
+
+```
+
+**Math operations**
+```python
+import math
+
+print(math.ceil(4.2))  # 5
+print(math.ceil(-4.2))  # -4
+
+print(math.floor(4.2))  # 4
+print(math.floor(-4.2))  # -5
+
+print(11 // 3)  # 3
+```
 ### Linked Lists
 **Scenario**: Create a linked list and add a sequence to it
 ```ad-example

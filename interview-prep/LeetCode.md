@@ -17,7 +17,6 @@ Don't over-prepare hard dynamic programming; focus on cleanly solving easy/mediu
 | [list_a] + [list_b]          | O(N + M)   | O(N + M)          |
 | list()                       | O(N)       | O(N)              |
 | .values(), .keys(), .items() | O(1)       | O(1)              |
-|                              |            |                   |
 
 ### Arrays
 Array (and string) slices are *inclusive* at the start and *non-inclusive* at the end
@@ -99,7 +98,11 @@ Pointers to a ListNode `head` is a *shallow copy*
 ```python
 def reverseList(head: ListNode) -> ListNode:
 	tail = head
-	while 
+	while head:
+		head.next = tail
+		head = head.next
+	
+	return tail
 ```
 ### Queue
 **Deque**: double-ended queue
@@ -144,6 +147,11 @@ hitches on the linked list strategy of mapping indices to values
 *Phase 2*: run cycle again, but only iterate each by 1
 ![[Screenshot 2026-06-15 at 11.59.03 AM.png|475]]
 
+**Convert set to list**
+```python
+set_nums = set()
+nums = list(set_nums)
+```
 ### Sliding Window
 **Window size**: `r - l + 1`
 ```python

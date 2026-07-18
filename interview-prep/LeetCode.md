@@ -34,6 +34,12 @@ count = nums.count(2)
 print(count)  # 2
 ```
 
+**enumerate()**
+```python
+for i, num in enumerate(nums):
+	...
+```
+
 **Unicode**
 ```python
 >> ord('a')  # 97

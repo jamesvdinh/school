@@ -125,6 +125,33 @@ reversed_str = "".join(char_deque)
 print(reverser_str)  # cba
 ```
 
+### Heap
+```python
+import heapq
+
+heap = []
+heapq.heappush(heap, item)  # adds item to heap
+heapq.heappop(heap)  # removes & returns smallest item
+heapq.heapify(lst)  # transforms a list into a heap in-place
+heap[0]  # accesses smallest item without removing it
+```
+
+**Using (key, value) pairs**
+```python
+import heapq
+
+heap = []
+counts = {
+	"apple": 1,
+	"orange": 2 
+}
+for key, val in counts.items():
+	heapq.heappush(heap, (val, key)) # heap will compare val
+	
+val, key = heapq.heappop(heap)
+# val = 1, key = "apple"
+```
+- breaks key value ties by comparing the value instead (swapped from dict)
 ### Regex
 ```python
 import re

@@ -110,6 +110,24 @@ def reverseList(head: ListNode) -> ListNode:
 	
 	return tail
 ```
+### Stack
+Can be made using a built-in list
+```python
+stack = []
+stack.append('a')
+stack.append('b')
+
+# Peek at top element
+if stack:
+	print(stack[-1])
+	
+# Pop elements from the stack
+print(stack.pop())  # 'b'
+print(stack.pop())  # 'a'
+
+# Check if empty
+print(len(stack) == 0)
+```
 ### Queue
 **Deque**: double-ended queue
 ```python
@@ -125,6 +143,12 @@ reversed_str = "".join(char_deque)
 print(reverser_str)  # cba
 ```
 
+| Op           | Time | Space |
+| ------------ | ---- | ----- |
+| insert       | O(1) |       |
+| delete       | O(1) |       |
+| peek (front) | O(1) |       |
+| search       | O(n) |       |
 ### Heap
 ```python
 import heapq
@@ -135,6 +159,14 @@ heapq.heappop(heap)  # removes & returns smallest item
 heapq.heapify(lst)  # transforms a list into a heap in-place
 heap[0]  # accesses smallest item without removing it
 ```
+
+| Op      | Time     | Space |
+| ------- | -------- | ----- |
+| insert  | O(log n) |       |
+| pop     | O(log n) |       |
+| peek    | O(1)     |       |
+| search  | O(n)     |       |
+| heapify | O(n)     | O(1)  |
 
 **Using (key, value) pairs**
 ```python
@@ -152,6 +184,26 @@ val, key = heapq.heappop(heap)
 # val = 1, key = "apple"
 ```
 - breaks key value ties by comparing the value instead (swapped from dict)
+
+### Binary Search
+**O(log n)** algorithm for finding an item in a *sorted* array
+```python
+arr = [...]
+target = ...
+
+low = 0
+high = len(arr) - 1
+while low <= high:
+	mid = low + (high - low) // 2
+	if arr[mid] == target:
+		return mid
+	elif arr[mid] > target:
+		high = mid - 1  # left half
+	else:
+		low = mid + 1  # right half
+
+return -1  # if target not found
+```
 ### Regex
 ```python
 import re

@@ -1,5 +1,13 @@
 ## Resources
 - [CAP Theorem for AI Agents](https://tianpan.co/blog/2026-04-14-cap-theorem-for-ai-agents)
+
+## Agent Loop
+1. LLM reasons the prompt
+2. LLM selects a tool or returns a final answer
+3. Tool is called (MCP) -- detailed tool definitions and input/output validation
+4. LLM observes the result
+5. Loops until task is complete or LLM decides to respond directly
+
 ## CAP Theorem
 The CAP theorem states that you can have at most 2 of 3 properties:
 1. **consistency** -- refusing to serve data until partition heals

@@ -1,3 +1,4 @@
+https://www.geeksforgeeks.org/software-testing/what-is-agile-methodology/
 ## Main Pillars
 - **Incremental Work**
 	- Customer satisfaction: deliver valuable software *early* and *continuously*
@@ -43,9 +44,30 @@
 
 ## Types of Agile Methodologies
 **Kanban**: visual workflow, limits WIP to manage continuous tasks
-**Scrum**: works in short sprints
-
-## Popular Agile Tools
+- is continuous flow
+- work moves through columns with no iteration length
+**Scrum**: works in short, fixed-length sprints
+- has defined meetings
+### Popular Agile Tools
 **Jira**
 **Trello**
 **Asana**
+
+## Common Terminology
+**Sprint Planning**: the meeting at the *start* of a sprint
+- team decides what work they'll commit to completing during the spring and how
+**Sprint Retro (retrospective)**: the meeting at the *end* of a sprint
+- focused on the process, not output -- what went well, what didn't, what to change
+**"definition of done"**: a shared, explicit *checklist* that a team *agrees upon* for when a piece of work is actually "complete"
+- e.g. code merged, tests passing, etc.
+**Backlog**: the full list of work not yet done
+**User story**: a small unit of work written from the user's perspective -- "As a [user], I want [goal], so that [reason]."
+**Story points**: a relative estimate of effort/complexity for a story
+**Epic**: a large body of work that's broken down into multiple smaller user stories
+**Velocity**: how many story points a team typically completes per sprint
+- used for future sprint planning
+**Backlog grooming/refinement**: an ongoing meeting where the team reviews and clarifies upcoming backlog items for others to pick up
+**Blocker**: anything stopping progress on a task
+**MVP**: the smallest version of a feature/product that's still usable
+- used to get feedback fast
+**CI/CD**: continuous integration (merging/testing code frequently) and continuous deployment (automatically shipping merged code)

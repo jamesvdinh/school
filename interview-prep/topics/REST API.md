@@ -1,11 +1,8 @@
 ## Background
 In an interview, there are three main API protocols to choose from, depending on the needs of the project
 
-```ad-summary
-title: REST (Representational State Transfer)
-
+### REST (Representational State Transfer)
 REST uses standard HTTP methods (**GET**, **POST**, **PUT**, **DELETE**) to manipulate resources via URLs. This is used for standard *CRUD* operations in a web or mobile app. The go-to protocol for most web services
-
 - Benefits
 	- maps naturally to DB operations and HTTP semantics
 	- is well-understood by developers
@@ -14,33 +11,24 @@ REST uses standard HTTP methods (**GET**, **POST**, **PUT**, **DELETE**) to mani
 - Tradeoffs
 	- API endpoints are static
 	- Can possibly over or under-fetch data
-```
 
-```ad-summary
-title: GraphQL
-
+### GraphQL
 GraphQL uses a *single endpoint* for all API methods. Uses a query language that lets clients specify *exactly* what data they need. Think mobile app that only needs basic information (use REST) versus web dashboard that displays comprehensive analytics (use GraphQL -- clients can request *exactly* what it needs in a single query)
-
 - Benefits
 	- more flexibility with complex queries
 	- can serve diverse clients with different data needs
 - Tradeoffs
 	- poor reusability with queries -> REST standardizes API calls
 	- adds complexity -> query parsing, schema validation, complex caching strategies
-```
 
-```ad-summary
-title: RPC (Remote Procedure Call)
-
-RPC protocols like gRPC (Google-developed, open source) use binary serialization and HTTP/2 for efficient communication betwene services. While REST treats data as resources, RPC allows the use of actions and procedures. Use RPC for microservices or internal APIs.
+### RPC (Remote Procedure Call)
+RPC protocols like gRPC (Google-developed, open source) use binary serialization and HTTP/2 for efficient communication between services. While REST treats data as resources, RPC allows the use of actions and procedures. Use RPC for microservices or internal APIs.
 
 Ex. quickly validate permissions -> `checkPermission(userID, resource)`
 REST -> `GET /api/{userID}` -> `user.permissions.resource`
-
 - Benefits:
 	- high-performance connections -> Protocol Buffers + HTTP/2 is much faster than REST's JSON-over-HTTP
 	- great for internal APIs
-```
 
 ```ad-caution
 For **real-time** features such as notifications, chat, or live updates, use different protocols like **WebSockets** or **Server-Sent Events (SSE)**: not traditional APIs, they are persistent connections

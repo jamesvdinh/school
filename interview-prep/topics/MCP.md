@@ -82,7 +82,7 @@ mcp = FastMCP(
 
 ```python
 @mcp.tool()
-async def serach_papers(query: str, limit: int = 10) -> str:
+async def search_papers(query: str, limit: int = 10) -> str:
 	"""
 	Search Semantic Scholar for research papers matching a free-text query.
 	

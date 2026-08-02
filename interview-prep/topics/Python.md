@@ -58,3 +58,24 @@ combined_df = df1.merge(df2, left_on="id", right_on="df_id")
 
 combined_df = df1.merge(df2, left_index=True, right_index=True)
 ```
+
+## Classes
+### Dataclasses
+```python
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class Invoice:
+	id: int
+	recipient_name: str
+	recipient_email: str
+	amount_cents: int
+	category: Optional(str) = "General"
+```
+
+- access a `@dataclass` type like how you access fields on an instance, not a dict
+```python
+  inv = Invoice(1, "John", "john@email.com", 250)
+  print(inv.recipient_name) # "John"
+```

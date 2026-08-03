@@ -205,11 +205,11 @@ def handle_create_invoice(body: dict, service: Invoice Service):
 	except InvalidInvoiceError as e:
 		return 422, {"error": str(e)}
 	except DuplicateInvoiceError:
-		return 409
+		return 409, ...
 	except InvoiceNotFoundError:
-		return 404
+		return 404, ...
 	except Exception as e:
-		return 500
+		return 500, ...
 	
 	return 201, {"id": inv.id, "recipient_name": inv.recipient_name}
 
@@ -220,3 +220,40 @@ Key design choices:
 		- `ValidationError` -> **422**
 		- `DuplicateError` -> **409**
 		- `NotFoundError` -> **404**
+
+Custom `Exception`s are `raise`ed from the `try` block, so the `except` statements capture those and return an appropriate status code + message
+
+**Main + Tests**
+```python
+if __name__ == "__main__":
+	def make_services():
+		inv_service = InvoiceService(InvoiceRepository())
+		pmt_service = PaymentService(PaymentRepository(), inv_service)
+		return inv_service, pmt_service
+		
+	lines = [{"description": "design", "quantity": 10, "unit": "hour", "rate_cents": 250}] # total = 2500 cents
+	inv, pay = make_services()
+	inv.create_invoice(1, lines, "John", "john@email.com")
+	
+	#default behavior
+	res = pay.apply_payment(1, 1, 1000, "Jane", "jane@email.com")
+	assert res["status"] == "partially_paid"
+	assert res["remaining_balance"] == 1500
+	
+	# domain invariance
+	try:
+		pay.apply_payment(2, 1, 0, "Jane", "jane@email.com")
+		assert False, "expected InvalidPaymentError"
+	except InvalidPaymentError:
+		pass
+		
+	# edge case -- reset the services
+	inv, pay = make_services()
+	inv.create_invoice(1, lines, "John", "john@email.com")
+	res = pay.apply_payment(1, 1, 3000, "Jane", "jane@email.com")
+	assert res["status"] == "paid"
+	assert res["remaining_balance"] == 0
+	assert pay._credits["jane@email.com"] == 500 # 3000 - 2500
+	
+	print("All tests passed")
+```

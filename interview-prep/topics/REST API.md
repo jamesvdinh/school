@@ -73,6 +73,13 @@ Core Entitites w/ corresponding REST resources
 2. Keep resources flat and use query parameters (when relationship is optional):
 	- `/tickets?event_id=123`
 
+```ad-important
+title: Nesting depth: stop at **one** level
+
+`/invoices/{id}/payments` is fine.
+`/invoices/{id}/payments/{id}/refunds` is not -> flatten to `/refunds?payment_id=...`
+```
+
 | Method   | Purpose                                                                               | Idempotent? | Safe? |
 | -------- | ------------------------------------------------------------------------------------- | ----------- | ----- |
 | `GET`    | Read a resource                                                                       | Yes         | Yes   |
@@ -81,6 +88,8 @@ Core Entitites w/ corresponding REST resources
 | `PATCH`  | Partially update a resource (set email to X is idempotent, but append to list is not) | No (often)  | No    |
 | `DELETE` | Remove a resource                                                                     | Yes         | No    |
 *Idempotent* = calling it multiple times has the same effect as calling it once. *Safe* = doesn't change server state.
+
+`PUT` vs `PATCH`: default to `PATCH` so that any the resource doesn't get completely wiped when updating its fields. This applies especially to resources with server-derived fields (like an invoice's computed balance) that live on a resource in downstream tasks.
 
 **Common headers:**
 
@@ -91,6 +100,23 @@ Core Entitites w/ corresponding REST resources
 - `X-RateLimit-Remaining` — common rate-limit header
 - `Retry-After: 30` — server says wait N seconds
 
+### Idempotency-Key header (Stripe's pattern)
+Client generates a *UUID* -> sends it as a header on `POST` -> server stores `(key -> response)` so a retried request returns the *original* response instead of *double-creating*
+- this is the production-grade version of **unique external ID** guarantee (applied at API rather than webhook)
+
+**Retry logic**: only *retry* a request (if it hits an idempotency key conflict) if it's a **transient error** (error happened on the server side), a **network error**, or a **rate limiting** blocker.
+
+```ad-example
+**Question**: A client sends `POST /invoices/{id}/payments` with `Idempotency-Key: abc123` and amount `$50`. Ten seconds later, they retry with the same key but amount `$75` — a bug on their end, not an intentional edit. What does your server do with the second request, and where would you store the state needed to catch this?
+
+**Answer**: We want the server to resent the original response if the second request has the same body. If it's a different body, the service would return a **409 Conflict**. Because of this, we'd have to store these fields in the idempotency record: `(key, request_fingerpring_hash, response_status, response_body, created_at)`, so a matching retry can be answered from cache instead of re-executing the payment.
+
+As for storing the idepompotency key, we want to ensure that every instance in a service (could be run in a load balancer) sees the key, regardless of which instance it originated from. Because of this, we would store the idempotency key in the *same Database as the payment itself*, ideally written in the same transaction as the payment row so they can't diverge.
+```
+
+```ad-important
+Idempotency keys should *expire* (~every **24 hours**) -- otherwise the table grows forever and a client can never reuse a key string for a genuinely new operation
+```
 ### Pagination
 
 Three common patterns:
@@ -99,12 +125,14 @@ Three common patterns:
 ```
 GET /papers?limit=20&offset=40
 ```
+- breaks under *concurrent* inserts -> page 2 can skip or repeat rows if new rows landed in the first page range
 
 **Cursor-based** (scales better, what most APIs use):
 ```
 GET /papers?limit=20&cursor=eyJpZCI6MTAwfQ
 ```
-The cursor is opaque (often base64-encoded), points to a position in the result set.
+The cursor is *opaque* (often base64-encoded), points to the *last-seen* id/timestamp
+- immune to *concurrent* inserts
 
 **Page-based** (human-friendly):
 ```
@@ -117,9 +145,14 @@ An API response is made up of two parts:
 2. The response body, which contains the data returned to the client (typically **JSON**)
 
 **Status codes:**
+https://status-codes.john-muinde.com/status-codes
 - `2xx` — success (`200 OK`, `201 Created`, `204 No Content`)
 - `3xx` — redirects (`301 Moved Permanently`, `304 Not Modified`)
-- `4xx` — client error (`400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `429 Too Many Requests`)
+- `4xx` — client error
+	- `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+	- `409 Conflict` (*Duplicate* Error, discrepancy b/w resource states)
+	- `422 Unprocessable Entity` (*Validation* Error, invalid args, missing fields)
+	- `429 Too Many Requests`
 - `5xx` — server error (`500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`)
 
 ### GraphQL

@@ -79,3 +79,55 @@ class Invoice:
   inv = Invoice(1, "John", "john@email.com", 250)
   print(inv.recipient_name) # "John"
 ```
+
+## Datetime
+```python
+from datetime import datetime, date, time, timezone
+
+now = datetime.now(timezone.utc)
+now_date = now.date()
+
+# specific date & time
+dt = datetime(2026, 8, 3, 14, 30, 0, tzinfo=timezone.utc)
+
+# date & time only
+d = date(2026, 8, 3)
+t = time(14, 30, 0)
+```
+
+**Parsing a date string**
+```python
+from datetime import datetime
+
+# from/to ISO format
+dt_iso = datetime.fromisoformat("2026-08-03T14:30:00+00:00")
+dt_iso_form = dt_iso.isoformat()
+
+# from string format
+date_string = "2026-08-03 14:30:00"
+format_mask = "%Y-%m-%d %H:%M:%S"
+
+dt_object = datetime.strptime(date_string, format_mask)
+print(dt_object)  # 2026-08-03 14:30:00
+
+# from unix epoch timestamp
+dt_epoch = datetime.fromtimestamp(1785743674.0, tz=timezone.utc)
+```
+
+**Computing time difference**
+```python
+from datetime import datetime, timedelta, timezone
+
+now = datetime.now(timezone.utc)
+tomorrow = now + timedelta(days=1)
+past_5hrs_30mins = now - timedelta(hours=5, minutes=30)
+
+duration = tomorrow - now
+print(duration.total_seconds())  # 86400.0
+
+# get number of days of a timedelta object
+print(duration.days)  # 1
+
+if now < tomorrow:
+	print("time moves forward!")
+```

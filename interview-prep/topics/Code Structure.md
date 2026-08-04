@@ -196,7 +196,7 @@ One function for each API function: `GET`, `POST`, etc.
 ```python
 from dataclasses import fields
 
-def handle_create_invoice(body: dict, service: Invoice Service):
+def handle_create_invoice(body: dict, service: InvoiceService):
 	required_fields = {f.name for f in fields(Invoice)}
 	if not required_fields.issubset(body.keys()):
 		return 400, {"error": "missing required fields"}

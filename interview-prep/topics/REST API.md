@@ -118,7 +118,6 @@ As for storing the idepompotency key, we want to ensure that every instance in a
 Idempotency keys should *expire* (~every **24 hours**) -- otherwise the table grows forever and a client can never reuse a key string for a genuinely new operation
 ```
 ### Pagination
-
 Three common patterns:
 
 **Offset/limit** (simple but slow at scale):
@@ -144,14 +143,29 @@ An API response is made up of two parts:
 1. The status code, which indicates whether the request was successful or not
 2. The response body, which contains the data returned to the client (typically **JSON**)
 
+```python
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.post("/subscriptions")
+def create_subscription(body: dict):
+	status, payload = handle_create(body, service)
+	return JSONResponse(status_code=status, content=payload)
+```
+
 **Status codes:**
 https://status-codes.john-muinde.com/status-codes
-- `2xx` — success (`200 OK`, `201 Created`, `204 No Content`)
+- `2xx` — success
+	- `200 OK` (*Successful* response, nothing created)
+	- `201 Created` (*Successful* resource created)
+	- `204 No Content`
 - `3xx` — redirects (`301 Moved Permanently`, `304 Not Modified`)
 - `4xx` — client error
-	- `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+	- `400 Bad Request` (*Incorrect* shape, *missing* fields, can't even *process* request)
+	- `401 Unauthorized`, `403 Forbidden`,
+	- `404 Not Found` (*Correct* shape, no resource found)
 	- `409 Conflict` (*Duplicate* Error, discrepancy b/w resource states)
-	- `422 Unprocessable Entity` (*Validation* Error, invalid args, missing fields)
+	- `422 Unprocessable Entity` (*Validation* Error, invalid args)
 	- `429 Too Many Requests`
 - `5xx` — server error (`500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`)
 

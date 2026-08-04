@@ -32,12 +32,12 @@
 - *portability*: runs the same wherever Docker runs
 
 ## Azure
-**App Service**: Azure's managed PaaS (Platform as a Service) for hosting web apps. You push a code/container -> Azure handles VM, scaling, networking underneath
+**App Service**: Azure's managed PaaS (Platform as a Service) for hosting web apps. You push a code/container -> Azure handles *VM*, *scaling*, *networking* underneath
 - Oracle Cloud gives raw compute instance (more manual)
 **Azure Container Instances (ACI) / Azure Kubernetes Service (AKS)**: two ways to run containers on Azure
-- ACI for single-container workloads, little orchestration
-- AKS for real orchestration (multiple services, auto-scaling, self-healing)
-**Azure Functions**: server-less; code that runs in response to an event (HTTP request, timer) without having to manage server at all
+- ACI for *single-container* workloads, little orchestration
+- AKS for *real orchestration* (multiple services, auto-scaling, self-healing)
+**Azure Functions**: *server-less*; code that runs in response to an event (HTTP request, timer) without having to manage server at all
 **Resource Group**: a logical container that groups related Azure resources together (VM, DB, storage account) for a single project
 - can be managed/billed/deleted as a unit
 **Microservices**:

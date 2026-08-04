@@ -1,3 +1,5 @@
+**Prompt Opinion deep dive**:
+https://claude.ai/code/artifact/988c0899-2ec6-47bf-8eb8-aad64471437d?via=auto_preview
 ## Basics
 **MCP**: Model Context Protocol
 **FastMCP**: Anthropic's official SDK for building MCP servers

@@ -11,7 +11,7 @@ Use **unique external IDs** for guaranteeing non-overlapping atomic write locks.
 
 The **App-Layer Gap**: when two identical webhook requests arrive concurrently across different web servers, they first read the DB at `t1`, find nothing there, then both proceed to write at `t2`.
 
-**Solution**: with a `UNIQUE(probider, external_id` constraint, the DB engine enforces *serialization* using row/index locks.
+**Solution**: with a `UNIQUE(provider, external_id` constraint, the DB engine enforces *serialization* using row/index locks.
 - this prevents duplicate writes at the storage layer, forcing the DB as the *ground truth* for every write
 - the unique constraint forces Service B to wait for Service A's transaction to commit before throwing the constraint violation
 

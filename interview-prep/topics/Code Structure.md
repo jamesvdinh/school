@@ -210,7 +210,7 @@ def handle_create_invoice(body: dict, service: InvoiceService):
 		return 404, ...
 	except Exception as e:
 		return 500, ...
-	
+	# 200 for successful response, 201 for created resource
 	return 201, {"id": inv.id, "recipient_name": inv.recipient_name}
 
 def handle_apply_payment(body: dict, service: PaymentService)

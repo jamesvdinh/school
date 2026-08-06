@@ -109,7 +109,7 @@ Client generates a *UUID* -> sends it as a header on `POST` -> server stores `(k
 ```ad-example
 **Question**: A client sends `POST /invoices/{id}/payments` with `Idempotency-Key: abc123` and amount `$50`. Ten seconds later, they retry with the same key but amount `$75` — a bug on their end, not an intentional edit. What does your server do with the second request, and where would you store the state needed to catch this?
 
-**Answer**: We want the server to resent the original response if the second request has the same body. If it's a different body, the service would return a **409 Conflict**. Because of this, we'd have to store these fields in the idempotency record: `(key, request_fingerpring_hash, response_status, response_body, created_at)`, so a matching retry can be answered from cache instead of re-executing the payment.
+**Answer**: We want the server to resend the original response if the second request has the same body. If it's a different body, the service would return a **409 Conflict**. Because of this, we'd have to store these fields in the idempotency record: `(key, request_fingerpring_hash, response_status, response_body, created_at)`, so a matching retry can be answered from cache instead of re-executing the payment.
 
 As for storing the idepompotency key, we want to ensure that every instance in a service (could be run in a load balancer) sees the key, regardless of which instance it originated from. Because of this, we would store the idempotency key in the *same Database as the payment itself*, ideally written in the same transaction as the payment row so they can't diverge.
 ```
@@ -130,7 +130,7 @@ GET /papers?limit=20&offset=40
 ```
 GET /papers?limit=20&cursor=eyJpZCI6MTAwfQ
 ```
-The cursor is *opaque* (often base64-encoded), points to the *last-seen* id/timestamp
+The cursor is *opaque* (often base64-encoded), points to a *specific* record
 - immune to *concurrent* inserts
 
 **Page-based** (human-friendly):
